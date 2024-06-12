@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Modernize Free</title>
+  <link rel="shortcut icon" type="image/png" href="../src/assets/images/logos/favicon.png" />
+  <link rel="stylesheet" href="../src/assets/css/styles.min.css" />
+</head>
+<body>
+  <!--  Body Wrapper -->
+  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+    data-sidebar-position="fixed" data-header-position="fixed">
+    <div id="navbar"></div>
+    <!--  Main wrapper -->
+    <div class="body-wrapper">
+      <!--  Header Start -->
+      <div id="header"></div>
+      <!--  Header End -->
+      <div class="container-fluid">
+        <div class="container-fluid">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title fw-semibold mb-4">เพิ่มสินค้า</h5>
+                    <form>
+                        <div class="col col-md-6 text-center mx-auto">
+                            <img id="image_pre" class="w-75 rounded mb-3" src="#" alt="">
+                        </div>
+                        <div class="text-center mb-3">
+                            <label class="form-label" for="image_upload">
+                            <button type="button" class="btn btn-lg btn-primary" id="image_upload_btn">ถ่ายภาพ</button>
+                        </label>
+                            <input type="file" id="image_upload" name="img" accept="image/*" capture="camera" class="form-control" hidden>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-12 mb-3">
+                                <label for="name_item" class="form-label">ชื่อสินค้า</label>
+                                <input type="text" class="form-control" id="name_item" placeholder="ชื่อสินค้า">
+                            </div>
+                            <div class="col-12 col-md-3 mb-3">
+                                <label for="group_item" class="form-label">หมวดหมู่</label>
+                                <select class="form-select" id="group_item">
+                                    <option selected>-หมวดหมู่-</option>
+                                    <option value="1">พาหนะ</option>
+                                    <option value="2">มือถือ</option>
+                                    <option value="3">ทอง</option>
+                                    <option value="4">กล้อง</option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-3 mb-3">
+                                <label for="price_item" class="form-label">ราคาจำนำ</label>
+                                <input type="number" class="form-control" id="price_item" placeholder="ราคา">
+                            </div>
+                            <div class="col-12 col-md-3 mb-3">
+                                <label for="per-interest" class="form-label"> % ดอกเบี้ย</label>
+                                <input type="number" class="form-control" id="per-interest" placeholder="ดอกเบี้ย">
+                            </div>
+                            <div class="col-12 col-md-3 mb-3">
+                                <label for="date-interest" class="form-label">ระยะเวลาการจ่ายดอก(วัน)</label>
+                                <input type="number" class="form-control" id="date-interest" placeholder="จ่ายดอก">
+                            </div>
+                        </div>
+                        <div class="text-center">
+                        <button type="submit" class="btn btn-primary">บันทึก</button>
+                        </div>
+                    </form>                    
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="../src/assets/libs/jquery/dist/jquery.min.js"></script>
+  <script src="../src/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../src/assets/js/sidebarmenu.js"></script>
+  <script src="../src/assets/js/app.min.js"></script>
+  <script src="../src/assets/libs/simplebar/dist/simplebar.js"></script>
+</body>
+<script>
+  $(document).ready(function() {
+      // Load header and footer content
+      $("#navbar").load("navbar.html"); 
+      $("#header").load("header.html"); 
+  });
+
+  $("#image_upload_btn").on("click", () => {
+    $("#image_upload").click();
+  });
+
+  $("#image_upload").on("change", () => {
+    previewImg();
+  });
+  previewImg = () => {
+    const fileInput = document.getElementById('image_upload');
+    const img = document.getElementById('image_pre');
+
+    const [file] = fileInput.files;
+    if (file) {
+        img.src = URL.createObjectURL(file);
+    }
+    }
+
+
+</script>
+</html>
