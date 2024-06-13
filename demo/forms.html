@@ -20,9 +20,9 @@
       <div class="container-fluid">
         <div class="container-fluid">
           <div class="card">
-            <div class="card-body">
+            <div class="card-body shadow-lg">
               <h5 class="card-title fw-semibold mb-4">เพิ่มสินค้า</h5>
-                    <form>
+                    <form id="formitem" enctype="multipart/form-data">
                         <div class="col col-md-6 text-center mx-auto">
                             <img id="image_pre" class="w-75 rounded mb-3" src="#" alt="">
                         </div>
@@ -61,7 +61,7 @@
                             </div>
                         </div>
                         <div class="text-center">
-                        <button type="submit" class="btn btn-primary">บันทึก</button>
+                        <button type="button" class="btn btn-primary" onclick="form_data()">บันทึก</button>
                         </div>
                     </form>                    
             </div>
@@ -98,8 +98,56 @@
     if (file) {
         img.src = URL.createObjectURL(file);
     }
-    }
+  }
 
+  // getdatenow = () => {
+  //   var timestamp = Date.now();
+  //   var localDateTime = new Date(timestamp);
+  //   localDateTime.setHours(localDateTime.getHours() + 7);
+  //   var datetimeNow = localDateTime.toISOString();
+  //   return datetimeNow;
+  // }
+
+  form_data = () => {
+    const formElement = $("#formitem")[0];
+    const formData = new FormData(formElement);
+
+    formData.append('case', 'insert');
+    formData.append('item_name', $('#name_item').val());
+    formData.append('item_group', $('#group_item').val());
+    formData.append('item_price', $('#price_item').val());
+    formData.append('item_interest', $('#per-interest').val());
+    formData.append('item_interest_date', $('#date-interest').val());
+    // formData.append('date_created', getdatenow());
+
+    insert(formData);
+
+  }
+
+  insert = (formData) => {
+    fetch('../api/insert_item.php?case=insert', {
+        method: 'POST',
+        body: formData,
+    })
+    then(res => {
+        if (!res.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return res.json();
+    })
+    .then(res => {
+        console.log(res);
+        if (res.status === 1) {
+            alert('บันทึกสินค้าเรียบร้อย');
+        } else {
+            alert('เกิดข้อผิดพลาดในการบันทึกสินค้า');
+        }
+    })
+    .catch(err => {
+        console.error('เกิดข้อผิดพลาดในการเชื่อมต่อ:', err);
+        alert('เกิดข้อผิดพลาดในการเชื่อมต่อ');
+    });
+}
 
 </script>
 </html>
