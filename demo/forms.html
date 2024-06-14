@@ -6,6 +6,22 @@
   <title>Modernize Free</title>
   <link rel="shortcut icon" type="image/png" href="../src/assets/images/logos/favicon.png" />
   <link rel="stylesheet" href="../src/assets/css/styles.min.css" />
+  <!-- <style>
+      label.form-label {
+      display: inline-block;
+      margin: 1em 0;
+      padding: 0.5em;
+      border: 2px solid #666;
+      border-color: #EEE #CCC #CCC #EEE;
+      background-color: #DDD;
+      cursor: pointer;
+    }
+
+    label.form-label:active {
+      border-color: #CCC #EEE #EEE #CCC;
+    }
+
+  </style> -->
 </head>
 <body>
   <!--  Body Wrapper -->
@@ -30,7 +46,7 @@
                             <label class="form-label" for="image_upload">
                             <button type="button" class="btn btn-lg btn-primary" id="image_upload_btn">ถ่ายภาพ</button>
                         </label>
-                            <input type="file" id="image_upload" name="img" accept="image/*" capture="camera" class="form-control" hidden>
+                            <input type="file" id="image_upload" name="img" accept="image/*;capture=camera" class="form-control" hidden>
                         </div>
                         <div class="row mb-3">
                             <div class="col-12 mb-3">
@@ -115,6 +131,7 @@
     formData.append('case', 'insert');
     formData.append('item_name', $('#name_item').val());
     formData.append('item_group', $('#group_item').val());
+    formData.append('item_group_name', $('#group_item').find(':selected').text());
     formData.append('item_price', $('#price_item').val());
     formData.append('item_interest', $('#per-interest').val());
     formData.append('item_interest_date', $('#date-interest').val());
