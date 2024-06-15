@@ -51,7 +51,8 @@ if (@$_POST['case'] == "insert") {
 
             // Prepare LINE Notify API request
             $url = 'https://notify-api.line.me/api/notify';
-            $token = 'Line_Token'; // Replace with your actual LINE Notify token
+            $token = 'Line_Token';
+            // $token = 'Line_Token';
             $headers = array(
                 'Authorization: Bearer ' . $token,
             );
@@ -81,7 +82,7 @@ if (@$_POST['case'] == "insert") {
 
             // Insert into database
             $query = "INSERT INTO insert_items (item_id, item_name, item_price, item_interest, item_d_interest, item_type, item_pic, item_d_create) 
-                      VALUES ('$new_id', '$item_name', '$item_price', '$item_interest', '$item_d_interest', '$item_type', '$image_name', '$item_d_create')";
+                      VALUES ('$new_id', '$item_name', '$item_price', '$item_interest', '$item_d_interest', '$item_type_name', '$image_name', '$item_d_create')";
             $stmt = $conn->query($query);
 
             if ($stmt) {
