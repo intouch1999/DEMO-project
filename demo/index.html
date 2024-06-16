@@ -4,8 +4,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Modernize Free</title>
-  <link rel="shortcut icon" type="image/png" href="../src/assets/images/logos/favicon.png" />
+  <title>thunder-cash</title>
+  <link rel="shortcut icon" type="image/png" href="../src/assets/images/logos/logo.png" />
   <link rel="stylesheet" href="../src/assets/css/styles.min.css" />
   <style>
     /* Custom CSS for card responsiveness */
@@ -32,6 +32,16 @@
         align-items: center; /* Center items vertically */
       }
 
+      .card-body #days-count {
+        margin-right: 30px;
+        margin-left: 30px;
+      }
+
+      .card-body #all-count {
+        margin-right: 30px;
+        margin-left: 30px;
+      }
+
       .item-details {
         flex: 1;
         text-align: center; /* Center text */
@@ -47,6 +57,50 @@
         height: auto; /* Maintain aspect ratio */
       }
     }
+    
+    .img-fluid.rounded {
+  transition: transform 0.3s ease; /* Smooth transition for transform */
+}
+
+.img-fluid.rounded:hover {
+  transform: scale(1.1); /* Scale up the image by 10% on hover */
+}
+
+
+.card {
+  transition: transform 0.2s ease, background-color 0.2s ease; /* Smooth transitions for card */
+}
+
+.card-body.d-flex.justify-content-between.align-items-center {
+  transition: transform 0.2s ease, background-color 0.2s ease; /* Smooth transitions for card-body */
+}
+
+.card-body.d-flex.justify-content-between.align-items-center:hover {
+  transform: scale(1.02); /* Scale up the card-body slightly on hover */
+  background-color: #f8f9fa; /* Change background color of card-body on hover */
+}
+
+.card.col-md-4.shadow-lg.rounded-pill {
+  transition: transform 0.2s ease, background-color 0.2s ease; /* Smooth transitions for card */
+}
+
+.card.col-md-4.shadow-lg.rounded-pill:hover {
+  transform: scale(1.02); /* Scale up the card-body slightly on hover */
+  
+}
+
+.app-header {
+  position: fixed;
+  width: 100%;
+  transition: transform 0.3s ease-in-out, visibility 0.3s ease-in-out;
+  z-index: 1000;
+}
+
+.app-header.hidden {
+  transform: translateY(-100%);
+  visibility: hidden;
+}
+
   </style>
 </head>
 
@@ -59,11 +113,20 @@
     <div class="body-wrapper">
       <!--  Header Start -->
       <div id="header"></div>
+      
       <!--  Header End -->
       <div class="container-fluid">
         <div class="card shadow-lg">
           <div class="card-body">
             <h5 class="card-title fw-semibold mb-4">รายการสินค้า</h5>
+            <div class="d-flex justify-content-around text-center ">
+              <div id="days-count" class="card col-md-4 shadow-lg rounded-pill" style="background-color: #5D87FE;">
+
+              </div>
+              <div id="all-count" class="card col-md-4 shadow-lg rounded-pill" style="background-color: #5D87FE;" >
+
+              </div>
+            </div>
             <div id="list-menu" class="container mt-4">
               <!-- Cards will be dynamically added here -->
             </div>
@@ -79,11 +142,9 @@
   <script src="../src/assets/libs/simplebar/dist/simplebar.js"></script>
   <script>
     $(document).ready(function () {
-      // Load header and footer content
       $("#navbar").load("navbar.html");
       $("#header").load("header.html");
 
-      // Function to fetch items from API
       function fetchItems(page) {
         return fetch(`../api/select_item.php?case=items&page=${page}`, {
           method: 'POST',
@@ -129,8 +190,8 @@
             <div class="card d-block d-md-none">
               <img src="../src/assets/images/product/${item.item_pic}" style="max-width: 266px max-height: 266px;" class="card-img-top" alt="...">
               <div class="card-body">
-                <h5 class="card-title">รหัส ${item.item_id}</h5>
-                <h5 class="card-title">ชื่อสินค้าบาท ${item.item_name}</h5>
+                <h5 class="card-title"># ${item.item_id}</h5>
+                <h5 class="card-title">ชื่อสินค้า ${item.item_name}</h5>
                   <p class="card-text">ประเภทสินค้า: ${item.item_type}</p>
                   <p class="card-text">ราคา: ${formatNumberWithCommas(item.item_price)} บาท</p>
                   <p class="card-text">ราคาดอกเบี้ย: ${per_interest(item.item_price, item.item_interest)}  บาท</p>
@@ -143,7 +204,6 @@
         }
       }
 
-      // Function to handle fetching and rendering items
       function handleFetchAndRender() {
         let page = 1;
         fetchItems(page)
@@ -151,10 +211,9 @@
             data.forEach(item => {
               renderCard(item);
             });
-            page++; // Increment page for next fetch
+            page++;
           });
 
-        // Detect when user scrolls to the bottom
         $(window).scroll(function() {
           if ($(window).scrollTop() + $(window).height() >= $(document).height() - 200) {
             fetchItems(page)
@@ -162,22 +221,19 @@
                 data.forEach(item => {
                   renderCard(item);
                 });
-                page++; // Increment page for next fetch
+                page++;
               });
           }
         });
       }
 
-      // Call function to handle initial fetch and render
       handleFetchAndRender();
 
-      // Call handleFetchAndRender on window resize to re-render cards based on viewport size
       $(window).resize(function() {
-        $('#list-menu').empty(); // Clear previous content
+        $('#list-menu').empty();
         handleFetchAndRender();
       });
 
-      // Helper functions
       const formatNumberWithCommas = (number) => {
         return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       };
@@ -199,12 +255,105 @@
         return formattedDate;
       };
 
-      // ดอกเบี้ย %
       const per_interest = (number , rate) => {
         let num = number * (rate / 100);
         return num.toFixed(2);
       } 
-    });
+
+      const todayItemCount = () => {
+  fetch('../api/select_item.php?case=DayCount', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      case: 'DayCount'
+    })
+  })
+  .then(res => {
+    if (!res.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return res.json();
+  })
+  .then(data => {
+    updateTodayItemCount(data);
+  })
+  .catch(err => {
+    console.error('เกิดข้อผิดพลาดในการเชื่อมต่อ:', err);
+    alert('เกิดข้อผิดพลาดในการเชื่อมต่อ');
+  });
+}
+
+const updateTodayItemCount = (data) => {
+  if ($(window).width() >= 768) { 
+    $('#days-count').html(`<h1 class="card-text m-4" style="color: white;">รายการจำนำวันนี้: ${data.todaycount}</h1>`);
+  } else {
+    $('#days-count').html(`<h5 class="card-text m-4" style="color: white;">รายการจำนำวันนี้: ${data.todaycount}</h5>`);
+  }
+}
+
+const allItemCount = () => {
+  fetch('../api/select_item.php?case=AllCount', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      case: 'AllCount'
+    })
+  })
+  .then(res => {
+    if (!res.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return res.json();
+  })
+  .then(data => {
+    updateAllItemCount(data); 
+  })
+  .catch(err => {
+    console.error('เกิดข้อผิดพลาดในการเชื่อมต่อ:', err);
+    alert('เกิดข้อผิดพลาดในการเชื่อมต่อ');
+  });
+}
+
+const updateAllItemCount = (data) => {
+  if ($(window).width() >= 768) {
+    $('#all-count').html(`<h1 class="card-text m-4" style="color: white;">รายการทั้งหมด: ${data.allcount}</h1>`);
+  } else {
+    $('#all-count').html(`<h5 class="card-text m-4" style="color: white;">รายการทั้งหมด: ${data.allcount}</h5>`);
+  }
+}
+
+allItemCount();
+
+$(window).resize(function() {
+  $('#days-count').empty();
+  $('#all-count').empty();
+  todayItemCount();
+  allItemCount();
+
+});
+
+todayItemCount();
+
+});
+
+let lastScrollTop = 0;
+
+window.addEventListener('scroll', function() {
+  let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+  if (scrollTop > lastScrollTop) {
+    $('.app-header').addClass('hidden');
+  } else {
+    $('.app-header').removeClass('hidden');
+  }
+
+  lastScrollTop = scrollTop;
+});
+
   </script>
 </body>
 

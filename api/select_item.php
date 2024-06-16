@@ -30,5 +30,46 @@ if (@$decode['case'] == "items") {
     }
 
     echo json_encode($data);
+
+} else if (@$decode['case'] == "DayCount") {
+    try {
+        $data = array('status' => 0);
+
+        // ใช้ PDO ในการเตรียมและดำเนินการคำสั่ง SQL
+        $sql = "SELECT COUNT(*) as item_d_create FROM `insert_items` WHERE DATE(item_d_create) = CURDATE()"; 
+        $stmt = $conn->query($sql);
+
+        if ($stmt->rowCount() > 0) {
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $data = array('status' => 1, 'todaycount' => $row['item_d_create']);
+        } else {
+            $data['status'] = 0;
+        }
+    } catch (PDOException $e) {
+        $data['error_message'] = $e->getMessage();
+    }
+
+    echo json_encode($data);
+
+} else if (@$decode['case'] == "AllCount") {
+    try {
+        $data = array('status' => 0);
+
+        // ใช้ PDO ในการเตรียมและดำเนินการคำสั่ง SQL
+        $sql = "SELECT COUNT(*) as item_d_create FROM `insert_items`"; 
+        $stmt = $conn->query($sql);
+
+        if ($stmt->rowCount() > 0) {
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $data = array('status' => 1, 'allcount' => $row['item_d_create']);
+        } else {
+            $data['status'] = 0;
+        }
+    } catch (PDOException $e) {
+        $data['error_message'] = $e->getMessage();
+    }
+
+    echo json_encode($data);
+
 }
 ?>
