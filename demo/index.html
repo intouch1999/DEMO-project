@@ -32,7 +32,15 @@
     }
 
     .img-fluid.rounded:hover {
-      transform: scale(1.1); /* Scale up the image by 10% on hover */
+      transform: scale(3); /* Scale up the image by 10% on hover */
+    }
+
+    .img-fluid-download {
+      transition: transform 0.3s ease; /* Smooth transition for transform */
+    }
+
+    .img-fluid-download:hover {
+      transform: scale(1.2); /* Scale up the image by 10% on hover */
     }
 
     .card {
@@ -67,13 +75,125 @@
       transform: translateY(-100%);
       visibility: hidden;
     }
+    body {font-family: Arial, Helvetica, sans-serif;}
+
+.clickable-image {
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.clickable-image:hover {opacity: 0.7;}
+
+.modal {
+  display: none; 
+  position: fixed; 
+  z-index: 999; 
+  padding-top: 100px; 
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%; 
+  overflow: auto; 
+  background-color: rgb(0,0,0); 
+  background-color: rgba(0,0,0,0.9); 
+}
+
+.modal-content {
+  margin: auto;
+  display: block;
+  max-width: 90%;
+  max-height: 90%;
+  width: auto;
+  height: auto;
+}
+
+#caption {
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 700px;
+  text-align: center;
+  color: #ccc;
+  padding: 10px 0;
+  height: 150px;
+}
+
+.modal-content, #caption {  
+  -webkit-animation-name: zoom;
+  -webkit-animation-duration: 0.6s;
+  animation-name: zoom;
+  animation-duration: 0.6s;
+}
+
+@-webkit-keyframes zoom {
+  from {-webkit-transform:scale(0)} 
+  to {-webkit-transform:scale(1)}
+}
+
+@keyframes zoom {
+  from {transform:scale(0)} 
+  to {transform:scale(1)}
+}
+
+.close {
+  position: absolute;
+  top: 15px;
+  right: 35px;
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+@media only screen and (max-width: 700px){
+  .modal-content {
+    width: 100%;
+  }
+}
+
+.image-container {
+      position: relative;
+      width: 50px;
+      height: 50px;
+    }
+
+    .image-container img {
+      width: 100%;
+      height: 100%;
+      transition: opacity 0.5s ease;
+    }
+
+    .image-container .hover-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .image-container:hover .default-image {
+      opacity: 0;
+    }
+
+    .image-container:hover .hover-image {
+      opacity: 1;
+    }
   </style>
 </head>
 
 <body>
   <!--  Body Wrapper -->
-  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
-    data-sidebar-position="fixed" data-header-position="fixed">
+  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
     <div id="navbar"></div>
     <!--  Main wrapper -->
     <div class="body-wrapper">
@@ -82,11 +202,23 @@
       <!--  Header End -->
       <div class="container-fluid">
         <div class="card shadow-lg">
-          <div class="card-body">
+          <div class="card-body large-card">
             <h5 class="card-title fw-semibold mb-4">รายการสินค้า</h5>
             <div class="d-flex justify-content-around text-center">
-              <div id="days-count" class="card col-md-4 shadow-lg rounded-pill" style="background-color: #5D87FE;"></div>
-              <div id="all-count" class="card col-md-4 shadow-lg rounded-pill" style="background-color: #5D87FE;"></div>
+              <div id="days-count" class=" col-md-2 shadow-lg rounded" style="background-color: #5D87FE;"></div>
+              <div id="all-count" class=" col-md-2 shadow-lg rounded" style="background-color: #5D87FE;"></div>
+              <div id="Export Excel" class="col-md-2 shadow-lg rounded text-center" style="background-color: #5D87FE; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <div class="image-container">
+                  <a href="../api/export_excel.php" style="display: block;">
+                    <img src="../src/assets/images/image/pngwing.com.png" alt="Export" class="default-image"/>
+                    <img src="../src/assets/images/image/file-arrow-right.png" alt="Hover" class="hover-image"/>
+                  </a>
+                </div>
+                <h5 class="card-text mt-2" style="color: white;">Export Excel</h5>
+              </div>
+              
+              
+
             </div>
             <div id="list-menu" class="container mt-4">
               <!-- Table will be dynamically added here -->
@@ -96,6 +228,13 @@
       </div>
     </div>
   </div>
+<!-- The Modal -->
+<div id="myModal" class="modal">
+  <span class="close">&times;</span>
+  <img class="modal-content" id="img01">
+</div>
+
+
   <script src="../src/assets/libs/jquery/dist/jquery.min.js"></script>
   <script src="../src/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../src/assets/js/sidebarmenu.js"></script>
@@ -105,7 +244,7 @@
     $(document).ready(function () {
       $("#navbar").load("navbar.html");
       $("#header").load("header.html");
-
+    
       function fetchItems(page) {
         return fetch(`../api/select_item.php?case=items&page=${page}`, {
           method: 'POST',
@@ -123,19 +262,23 @@
           console.error('Error fetching items:', error);
         });
       }
-
-      // Function to render table rows
+    
       function renderTableRow(item) {
         $('#item-table tbody').append(`
           <tr>
-            <td>${item.item_id}</td>
-            <td>${item.item_name}</td>
-            <td>${item.item_type}</td>
-            <td>${formatNumberWithCommas(item.item_price)} บาท</td>
-            <td>${per_interest(item.item_price, item.item_interest)} บาท</td>
-            <td>${addDATE(item.item_d_create, item.item_d_interest)}</td>
-            <td>${changeformate(item.item_d_create)}</td>
-            <td><img src="../src/assets/images/product/${item.item_pic}" class="img-fluid rounded" style="max-width: 150px; height: auto;" alt="Product Image"></td>
+            <td class="text-center">${item.item_id}</td>
+            <td class="text-center">${item.item_name}</td>
+            <td class="text-center">${item.item_type}</td>
+            <td class="text-center">${formatNumberWithCommas(item.item_price)} บาท</td>
+            <td class="text-center">${per_interest(item.item_price, item.item_interest)} บาท</td>
+            <td class="text-center">${addDATE(item.item_d_create, item.item_d_interest)}</td>
+            <td class="text-center">${changeformate(item.item_d_create)}</td>
+            <td class="text-center">
+              <img src="../src/assets/images/product/${item.item_pic}" class="img-fluid rounded clickable-image" style="max-width: 20px; height: auto;" alt="${item.item_name}">
+            </td>
+            <td class="text-center">
+              <img src="../src/assets/images/image/download.png" class ="img-fluid-download rounded" style="max-width: 20px; height: auto;" alt="download" >
+            </td>
           </tr>
         `);
       }
@@ -149,7 +292,7 @@
             });
             page++;
           });
-
+    
         $(window).scroll(function() {
           if ($(window).scrollTop() + $(window).height() >= $(document).height() - 200) {
             fetchItems(page)
@@ -162,57 +305,59 @@
           }
         });
       }
-
+    
       $('#list-menu').html(`
-      <div class="table-responsive">
-        <table id="item-table" class="table table-hover ">
-          <thead >
-            <tr>
-              <th>รหัสสินค้า</th>
-              <th>ชื่อสินค้า</th>
-              <th>ประเภทสินค้า</th>
-              <th>ราคา</th>
-              <th>ราคาดอกเบี้ย</th>
-              <th>วันที่ครบกำหนดชำระดอก</th>
-              <th>เพิ่มสินค้า</th>
-              <th>รูปภาพ</th>
-            </tr>
-          </thead>
-          <tbody>
-          </tbody>
-        </table>
-      </div>
-    `);
-
-
+        <div class="table-responsive">
+          <table id="item-table" class="table table-hover ">
+            <thead >
+              <tr>
+                <th class="text-center text-nowrap">รหัสสินค้า</th>
+                <th class="text-center text-nowrap">ชื่อสินค้า</th>
+                <th class="text-center text-nowrap">ประเภทสินค้า</th>
+                <th class="text-center text-nowrap">ราคา</th>
+                <th class="text-center text-nowrap">ราคาดอกเบี้ย</th>
+                <th class="text-center text-nowrap">วันที่ครบกำหนดชำระดอก</th>
+                <th class="text-center text-nowrap">เพิ่มสินค้า</th>
+                <th class="text-center text-nowrap">รูปภาพ</th>
+                <th class="text-center text-nowrap">ดาวโหลด</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+      `);
+    
       handleFetchAndRender();
-
+    
       const formatNumberWithCommas = (number) => {
         return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       };
-
+    
       const addDATE = (datetime, days) => {
         let date = new Date(datetime);
         date.setDate(date.getDate() + days);
-        let daysOfWeek = ['วันอาทิตย์', 'วันจันทร์', 'วันอังคาร', 'วันพุธ', 'วันพฤหัสบดี', 'วันศุกร์', 'วันเสาร์'];
-        let dayName = daysOfWeek[date.getDay()];
-        let formattedDate = `${dayName} ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+        // let daysOfWeek = ['วันอาทิตย์', 'วันจันทร์', 'วันอังคาร', 'วันพุธ', 'วันพฤหัสบดี', 'วันศุกร์', 'วันเสาร์'];
+        // let dayName = daysOfWeek[date.getDay()];
+        // let formattedDate = `${dayName} ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+        let formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
         return formattedDate;
       };
-
+    
       const changeformate = (datetime) => {
         let date = new Date(datetime);
-        let daysOfWeek = ['วันอาทิตย์', 'วันจันทร์', 'วันอังคาร', 'วันพุธ', 'วันพฤหัสบดี', 'วันศุกร์', 'วันเสาร์'];
-        let dayName = daysOfWeek[date.getDay()];
-        let formattedDate = `${dayName} ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+        // let daysOfWeek = ['วันอาทิตย์', 'วันจันทร์', 'วันอังคาร', 'วันพุธ', 'วันพฤหัสบดี', 'วันศุกร์', 'วันเสาร์'];
+        // let dayName = daysOfWeek[date.getDay()];
+        // let formattedDate = `${dayName} ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`; 
+        let formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
         return formattedDate;
       };
-
+    
       const per_interest = (number, rate) => {
         let num = number * (rate / 100);
         return num.toFixed(2);
       };
-
+    
       const todayItemCount = () => {
         fetch('../api/select_item.php?case=DayCount', {
           method: 'POST',
@@ -237,15 +382,23 @@
           alert('เกิดข้อผิดพลาดในการเชื่อมต่อ');
         });
       }
-
+    
       const updateTodayItemCount = (data) => {
         if ($(window).width() >= 768) { 
-          $('#days-count').html(`<h1 class="card-text m-4" style="color: white;">รายการจำนำวันนี้: ${data.todaycount}</h1>`);
+          $('#days-count').html(`
+          <img src="../src/assets/images/image/calendar.png" class="card-img-top mt-2" alt="..." style="max-width: 45px; height: auto;">
+          <h1 class="card-text m-2" style="color: white;">${data.todaycount}</h1>
+          <h5 class="card-text mb-2" style="color: white;">รายการจำนำวันนี้</h5>
+            `);
         } else {
-          $('#days-count').html(`<h5 class="card-text m-4" style="color: white;">รายการจำนำวันนี้: ${data.todaycount}</h5>`);
+          $('#days-count').html(`
+          <img src="../src/assets/images/image/calendar.png" class="card-img-top mt-2" alt="..." style="max-width: 25px; height: auto;">
+          <h3 class="card-text m-2" style="color: white;">${data.todaycount}</h3>
+          <h5 class="card-text m-2" style="color: white;">รายการจำนำวันนี้</h5>
+            `);
         }
       }
-
+    
       const allItemCount = () => {
         fetch('../api/select_item.php?case=AllCount', {
           method: 'POST',
@@ -270,41 +423,75 @@
           alert('เกิดข้อผิดพลาดในการเชื่อมต่อ');
         });
       }
-
+    
       const updateAllItemCount = (data) => {
-        if ($(window).width() >= 768) {
-          $('#all-count').html(`<h1 class="card-text m-4" style="color: white;">รายการทั้งหมด: ${data.allcount}</h1>`);
+        if ($(window).width() >= 768) { 
+          $('#all-count').html(`
+          <img src="../src/assets/images/image/all.png" class="card-img-top mt-2" alt="..." style="max-width: 45px; height: auto;">
+          <h1 class="card-text m-2" style="color: white;">${data.allcount}</h1>
+          <h5 class="card-text mb-2" style="color: white;">รายการทั้งหมด</h5>
+            `);
         } else {
-          $('#all-count').html(`<h5 class="card-text m-4" style="color: white;">รายการทั้งหมด: ${data.allcount}</h5>`);
+          $('#all-count').html(`
+          <img src="../src/assets/images/image/all.png" class="card-img-top mt-2" alt="..." style="max-width: 25px; height: auto;">
+          <h3 class="card-text m-2" style="color: white;">${data.allcount}</h3>
+          <h5 class="card-text m-2" style="color: white;">รายการทั้งหมด</h5>
+          `);
         }
       }
-
+    
       allItemCount();
-
+    
       $(window).resize(function() {
         $('#days-count').empty();
         $('#all-count').empty();
         todayItemCount();
         allItemCount();
       });
-
+    
       todayItemCount();
+    
+      // Modal image handling
+      var modal = document.getElementById("myModal");
+      var modalImg = document.getElementById("img01");
+    
+      $(document).on('click', '.clickable-image', function() {
+        var imgSrc = $(this).attr('src');
+        var imgAlt = $(this).attr('alt');
+        modal.style.display = "block";
+        modalImg.src = imgSrc;
+      });
+    
+      var span = document.getElementsByClassName("close")[0];
+      span.onclick = function() { 
+        modal.style.display = "none";
+      };
+    
+      // Close modal when clicking outside of the image
+      modal.onclick = function(event) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
+      };
+    
+      let lastScrollTop = 0;
+    
+      window.addEventListener('scroll', function() {
+        let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    
+        if (scrollTop > lastScrollTop) {
+          $('.app-header').addClass('hidden');
+        } else {
+          $('.app-header').removeClass('hidden');
+        }
+    
+        lastScrollTop = scrollTop;
+      });
     });
-
-    let lastScrollTop = 0;
-
-    window.addEventListener('scroll', function() {
-      let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-
-      if (scrollTop > lastScrollTop) {
-        $('.app-header').addClass('hidden');
-      } else {
-        $('.app-header').removeClass('hidden');
-      }
-
-      lastScrollTop = scrollTop;
-    });
-  </script>
+    </script>
+    
+    
 </body>
+
 
 </html>
