@@ -188,6 +188,18 @@
     .image-container:hover .hover-image {
       opacity: 1;
     }
+
+    .col-md-2 {
+      transition: transform 0.2s ease, background-color 0.2s ease; /* Smooth transitions for card-body */
+      
+    }
+
+    .col-md-2:hover {
+      transform: scale(1.1); 
+      box-shadow: 0px 1rem 3rem 0px rgb(3 95 251 / 25%) !important;
+    }
+
+    
   </style>
 </head>
 
@@ -205,9 +217,9 @@
           <div class="card-body large-card">
             <h5 class="card-title fw-semibold mb-4">รายการสินค้า</h5>
             <div class="d-flex justify-content-around text-center">
-              <div id="days-count" class=" col-md-2 shadow-lg rounded" style="background-color: #5D87FE;"></div>
-              <div id="all-count" class=" col-md-2 shadow-lg rounded" style="background-color: #5D87FE;"></div>
-              <div id="Export Excel" class="col-md-2 shadow-lg rounded text-center" style="background-color: #5D87FE; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+              <div id="days-count" class=" col-md-2 rounded" style="background-color: #5D87FE;"></div>
+              <div id="all-count" class=" col-md-2  rounded" style="background-color: #5D87FE;"></div>
+              <div id="Export Excel" class="col-md-2 rounded text-center" style="background-color: #5D87FE; display: flex; flex-direction: column; justify-content: center; align-items: center;">
                 <div class="image-container">
                   <a href="../api/export_excel.php" style="display: block;">
                     <img src="../src/assets/images/image/pngwing.com.png" alt="Export" class="default-image"/>
@@ -277,7 +289,9 @@
               <img src="../src/assets/images/product/${item.item_pic}" class="img-fluid rounded clickable-image" style="max-width: 20px; height: auto;" alt="${item.item_name}">
             </td>
             <td class="text-center">
+              <a href="../pdf/pdf.php?item_id=${item.item_id}" target="_blank">
               <img src="../src/assets/images/image/download.png" class ="img-fluid-download rounded" style="max-width: 20px; height: auto;" alt="download" >
+              </a>
             </td>
           </tr>
         `);
