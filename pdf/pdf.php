@@ -35,9 +35,9 @@ if (isset($_GET['item_id'])) {
         // Set document information
         $pdf->SetCreator(PDF_CREATOR);
         $pdf->SetAuthor('Nicola Asuni');
-        $pdf->SetTitle('TCPDF Example with THSarabunNew Fonts');
-        $pdf->SetSubject('TCPDF Font Example');
-        $pdf->SetKeywords('TCPDF, PDF, example, test, guide');
+        $pdf->SetTitle('ใบสัญญาสินค้ารหัส ' . $item_id);
+        $pdf->SetSubject('ใบสัญญาสินค้ารหัส ' . $item_id);
+        $pdf->SetKeywords('ใบสัญญา');
 
         $pdf->setPrintHeader(false);
         $pdf->setPrintFooter(false);
@@ -314,7 +314,7 @@ if (isset($_GET['item_id'])) {
         $pdf->Cell(0, 0, '(.........................................)', 0, 1, 'L');
         $pdf->Ln(5);
         // Close and output PDF document
-        $pdf->Output('item_'.$item_id.'.pdf', 'I');
+        $pdf->Output('ใบสัญญาสินค้ารหัส '.$item_id.'.pdf', 'I');
         $pdf->Close();
     } else {
         echo 'Item not found.';
