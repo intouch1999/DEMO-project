@@ -115,7 +115,7 @@ if (isset($_GET['item_id'])) {
         $pdf->Ln(10);
 
         $pdf->SetFont(THSarabunNew, '', 16);
-        $pdf->SetX(11);
+        $pdf->SetX(9);
         $pdf->MultiCell(0, 0, "สัญญานี้ทำขึ้นระหว่าง นายกนกศักดิ์ นากประทุม อายุ 35 ปี อยู่บ้านเลขที่ 45/121 หมู่ 5 ซอยเสรีไทย 32 ถนนเสรีไทย\nแขวงคันนายาว เขตคันนายาว กรุงเทพฯ ซึ่งต่อไปในสัญญานี้เรียกว่าผู้ขายฝาก ฝ่ายหนึ่ง\nกับ คุณโคมล อยู่บ้ายเลขที่ AAA BBB ซึ่งต่อไปในสัญญานี้เรียกว่าผู้ซื้อฝาก อีกฝ่ายหนึ่ง\nทั้งสองฝ้ายตกลงทำสัญญากันมีข้อความดังต่อไปนี้ คือ", 0, 'L');
         $pdf->Ln(5);
 
@@ -145,39 +145,63 @@ if (isset($_GET['item_id'])) {
         // <p>วันที่สร้าง: ' . htmlspecialchars($item['item_d_create']) . '</p>
         // ';
 
-        function convertNumberToThaiText($number) {
-            $textNumbers = array(
-                '0' => 'ศูนย์', '1' => 'หนึ่ง', '2' => 'สอง', '3' => 'สาม',
-                '4' => 'สี่', '5' => 'ห้า', '6' => 'หก', '7' => 'เจ็ด',
-                '8' => 'แปด', '9' => 'เก้า', '10' => 'สิบ', '100' => 'ร้อย',
-                '1000' => 'พัน', '10000' => 'หมื่น', '100000' => 'แสน', '1000000' => 'ล้าน'
-            );
-        
-            $unitNames = array('', 'สิบ', 'ร้อย', 'พัน', 'หมื่น', 'แสน', 'ล้าน');
-        
-            $numberStr = (string)$number;
-            $length = strlen($numberStr);
-            $thaiText = '';
-        
-            for ($i = 0; $i < $length; $i++) {
-                $digit = $numberStr[$i];
-                $position = $length - $i - 1;
-        
-                if ($digit != '0') {
-                    if ($position == 1 && $digit == '1') {
-                        $thaiText .= 'สิบ';
-                    } elseif ($position == 1 && $digit == '2') {
-                        $thaiText .= 'ยี่สิบ';
-                    } elseif ($position == 0 && $digit == '1' && $length > 1) {
-                        $thaiText .= 'เอ็ด';
-                    } else {
-                        $thaiText .= $textNumbers[$digit] . $unitNames[$position];
-                    }
-                }
+        function Convert($amount_number)
+        {
+            $amount_number = number_format($amount_number, 2, ".", "");
+            $pt = strpos($amount_number, ".");
+            $number = $fraction = "";
+            if ($pt === false) 
+                $number = $amount_number;
+            else
+            {
+                $number = substr($amount_number, 0, $pt);
+                $fraction = substr($amount_number, $pt + 1);
             }
-        
-            return $thaiText . 'บาทถ้วน';
+            
+            $ret = "";
+            $baht = ReadNumber($number);
+            if ($baht != "")
+                $ret .= $baht . "บาท";
+            
+            $satang = ReadNumber($fraction);
+            if ($satang != "")
+                $ret .=  $satang . "สตางค์";
+            else 
+                $ret .= "ถ้วน";
+            
+            return $ret;
         }
+        
+        function ReadNumber($number)
+        {
+            $position_call = array("แสน", "หมื่น", "พัน", "ร้อย", "สิบ", "");
+            $number_call = array("", "หนึ่ง", "สอง", "สาม", "สี่", "ห้า", "หก", "เจ็ด", "แปด", "เก้า");
+            $number = $number + 0;
+            $ret = "";
+            if ($number == 0) return $ret;
+            if ($number > 1000000)
+            {
+                $ret .= ReadNumber(intval($number / 1000000)) . "ล้าน";
+                $number = intval(fmod($number, 1000000));
+            }
+            
+            $divider = 100000;
+            $pos = 0;
+            while($number > 0)
+            {
+                $d = intval($number / $divider);
+                $ret .= (($divider == 10) && ($d == 2)) ? "ยี่" : 
+                    ((($divider == 10) && ($d == 1)) ? "" :
+                    ((($divider == 1) && ($d == 1) && ($ret != "")) ? "เอ็ด" : $number_call[$d]));
+                $ret .= ($d ? $position_call[$pos] : "");
+                $number = $number % $divider;
+                $divider = $divider / 10;
+                $pos++;
+            }
+            return $ret;
+        }
+
+
 
         function express_date($date, $days) {
             $datetime = new DateTime($date);
@@ -193,6 +217,15 @@ if (isset($_GET['item_id'])) {
         
 
         $expressed_date = express_date($item['item_d_create'], $item['item_d_interest']);
+
+        function interest ($price , $rate) {
+            $interest = ($price * $rate) / 100;
+            return $interest;
+        }
+
+        $price_interest = $item['item_price'] + interest($item['item_price'], $item['item_d_interest']);
+
+        $price_interest_formatTH = Convert($price_interest);
 
         $html = '
         <style>
@@ -234,16 +267,16 @@ if (isset($_GET['item_id'])) {
 }
 
         </style>
-        <p class="indent">1) ผู้ขายฝากตกลงขายฝากและผู้ซื้อฝากกตกลกรับซื้อฝาก '.($item['item_name']).' 
-        <br>ซึ่งเป็นกรรมสิทธิ์ของผู้ขายฝากเป็นจำนวนเงินทั้งสิ้น '.number_format($item['item_price']).' ('.convertNumberToThaiText(($item['item_price'])).')</p>
-        <p class="indent">2) ในระว่างที่อยู่ในระยะเวลาแห่งการไถ่ทรัพย์สินที่ขายฝาก ผู้ซื้อฝากจะไม่ดำเนินการเกี่ยวกับนิติกรรมใดๆ บนทรัพย์สิน
+        <p>1) ผู้ขายฝากตกลงขายฝากและผู้ซื้อฝากกตกลกรับซื้อฝาก '.($item['item_name']).' 
+        <br>ซึ่งเป็นกรรมสิทธิ์ของผู้ขายฝากเป็นจำนวนเงินทั้งสิ้น '.number_format($item['item_price'] , 2).' บาท ('.Convert(($item['item_price'])).')</p>
+        <p>2) ในระว่างที่อยู่ในระยะเวลาแห่งการไถ่ทรัพย์สินที่ขายฝาก ผู้ซื้อฝากจะไม่ดำเนินการเกี่ยวกับนิติกรรมใดๆ บนทรัพย์สิน
         <br>ที่รับซื้อฝากมานั้น</p>
-        <p class="indent">3) ผู้ซื้อฝากตกลงให้ผู้ขายฝากทำการไถ่ทรัพย์สินที่ขายฝากได้ภายใน '.$expressed_date.' โดยกำหนดสินไถ่ไว้เป็นเงินจำนวน
-        <br>'.number_format($item['item_price']).' ('.convertNumberToThaiText(($item['item_price'])).') </p>
-        <p class="indent">4) ค่าฤชาธรรมเนียมในการขายฝาก และค่าฤชาธรรมเนียมในการไถ่ทรัพย์สินที่ขายฝากนั้น ผู้ขายฝากเป็นผู้รับภาระทั้งสิ้น</p>
-        <p class="indent">5) ทรัพย์สินไุถ่นั้นจะต้องส่งคืนตามสภาพที่เป้นอยู๋ ณ เวลาที่ทำการไถ่ ถ้าหากทรัพย์สินนั้นถูกทำลายหรือทำให้เสื่อมเสียไป
+        <p>3) ผู้ซื้อฝากตกลงให้ผู้ขายฝากทำการไถ่ทรัพย์สินที่ขายฝากได้ภายใน '.$expressed_date.' โดยกำหนดสินไถ่ไว้เป็นเงินจำนวน
+        <br>'.number_format($price_interest , 2).' บาท ('.$price_interest_formatTH.') </p>
+        <p>4) ค่าฤชาธรรมเนียมในการขายฝาก และค่าฤชาธรรมเนียมในการไถ่ทรัพย์สินที่ขายฝากนั้น ผู้ขายฝากเป็นผู้รับภาระทั้งสิ้น</p>
+        <p>5) ทรัพย์สินไุถ่นั้นจะต้องส่งคืนตามสภาพที่เป้นอยู๋ ณ เวลาที่ทำการไถ่ ถ้าหากทรัพย์สินนั้นถูกทำลายหรือทำให้เสื่อมเสียไป
         <br>เพราะความผิดของผู้ซื้อฝาก ผู้ซื้อฝากต้องชดใช้ค่าสินไหมทดแทนในความเสียหายนั้นให้แก่ผู้ขายฝาก</p>
-        <p class="indent">สัญญานี้ถูกทำขึ้นเป็นสองฉบับมีข้อความถูกต้องตรงกัน คู่สัญญาทั้งสองฝ่ายได้อ่านและเข้าใจโดยตลอดแล้วจึงลงลายมือชื่อ
+        <p>สัญญานี้ถูกทำขึ้นเป็นสองฉบับมีข้อความถูกต้องตรงกัน คู่สัญญาทั้งสองฝ่ายได้อ่านและเข้าใจโดยตลอดแล้วจึงลงลายมือชื่อ
         <br>ไว้ต่อหน้าพยานเป็นสำคัญและเก็บสัญญาไว้ฝ่ายละฉบับ
         </p>
 
@@ -252,7 +285,7 @@ if (isset($_GET['item_id'])) {
         
        
 
-        $pdf->writeHTML($html, true, false, true, false, '');
+        $pdf->writeHTML($html, true, false, true, false, 'L');
         $pdf->LN(10);
 
         $pdf->SetFont(THSarabunNew, '', 16);
