@@ -51,8 +51,8 @@ if (@$_POST['case'] == "insert") {
 
             // Prepare LINE Notify API request
             $url = 'https://notify-api.line.me/api/notify';
-            // $token = 'Line_Token';
             $token = 'Line_Token';
+            // $token = 'Line_Token';
             $headers = array(
                 'Authorization: Bearer ' . $token,
             );
@@ -60,12 +60,20 @@ if (@$_POST['case'] == "insert") {
             // Prepare image data for attachment
             $image_data = file_get_contents($image_path);
 
-            $formate_price = number_format($item_price, 2, '.', ',');
+            function price_interest($item_price, $item_interest) {
+                $interest = $item_price * $item_interest / 100;
+                return $interest;
+            }
+
+            function datetime($item_d_interest, $item_d_create) {
+                $createDate = new DateTime($item_d_create);
+                $createDate->modify("+{$item_d_interest} days");
+                return $createDate->format('d/m/Y');
+            }
 
             // Set multipart form data
             $post_data = array(
-                'message' => "\n รหัสสินค้า: $new_id \n ชื่อสินค้า: $item_name \n ราคา: $formate_price บาท
-                \n ประเภทสินค้า: $item_type_name  \n ดอกเบี้ย: $item_interest % \n ครบชำระดอกเบี้ย: $item_d_interest วัน
+                'message' => "\n รหัสสินค้า: $new_id \n ชื่อสินค้า: $item_name \n ประเภทสินค้า: $item_type_name \n ราคา: ".number_format($item_price, 2, '.', ',')." บาท \n ดอกเบี้ย: $item_interest % \n ราคารวมดอกเบี้ย: " . number_format(price_interest($item_price, $item_interest) , 2, '.', ',') . " บาท \n ครบชำระดอกเบี้ย: " . datetime($item_d_interest, $item_d_create) . "
                 \n วันที่สร้าง: $item_d_create \n",
                 'imageFile' => new CURLFile($image_path, 'image/jpeg', $image_name)
             );
