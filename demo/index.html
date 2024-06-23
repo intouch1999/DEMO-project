@@ -11,75 +11,45 @@
     />
     <link rel="stylesheet" href="../src/assets/css/styles.min.css" />
     <style>
-
       body {
         background-color: aliceblue;
-      }
-      /* Custom CSS for card responsiveness */
-      .item-details {
-        flex: 1;
-      }
-
-      @media (max-width: 768px) {
-        /* Adjust container and card layout */
-        .table-responsive {
-          display: block;
-          width: 100%;
-          overflow-x: auto;
-          -webkit-overflow-scrolling: touch;
-        }
-
-        .table-responsive td,
-        .table-responsive th {
-          white-space: nowrap;
-        }
       }
 
       .img-fluid.rounded {
         transition: transform 0.3s ease;
-        /* Smooth transition for transform */
       }
 
       .img-fluid.rounded:hover {
         transform: scale(1.5);
-        /* Scale up the image by 10% on hover */
       }
 
       .img-fluid-download {
         transition: transform 0.3s ease;
-        /* Smooth transition for transform */
       }
 
       .img-fluid-download:hover {
         transform: scale(1.2);
-        /* Scale up the image by 10% on hover */
       }
 
       .card {
         transition: transform 0.2s ease, background-color 0.2s ease;
-        /* Smooth transitions for card */
       }
 
       .card-body.d-flex.justify-content-between.align-items-center {
         transition: transform 0.2s ease, background-color 0.2s ease;
-        /* Smooth transitions for card-body */
       }
 
       .card-body.d-flex.justify-content-between.align-items-center:hover {
         transform: scale(1.02);
-        /* Scale up the card-body slightly on hover */
         background-color: #f8f9fa;
-        /* Change background color of card-body on hover */
       }
 
       .card.col-md-4.shadow-lg.rounded-pill {
         transition: transform 0.2s ease, background-color 0.2s ease;
-        /* Smooth transitions for card */
       }
 
       .card.col-md-4.shadow-lg.rounded-pill:hover {
         transform: scale(1.02);
-        /* Scale up the card-body slightly on hover */
       }
 
       .app-header {
@@ -225,7 +195,6 @@
 
       .col-md-2 {
         transition: transform 0.2s ease, background-color 0.2s ease;
-        /* Smooth transitions for card-body */
       }
 
       .col-md-2:hover {
@@ -244,9 +213,7 @@
         left: 0;
         width: 100%;
         height: 1px;
-        /* ความยาวของเส้นใต้ */
         background-color: #18272f;
-        /* สีของเส้นใต้ */
         --bs-table-hover-color: #0059ef;
       }
 
@@ -294,17 +261,17 @@
               >
                 <div
                   id="days-count"
-                  class="col-md-2 rounded"
+                  class="col-md-2 rounded p-2"
                   style="background-color: #5d87fe"
                 ></div>
                 <div
                   id="all-count"
-                  class="col-md-2 rounded"
+                  class="col-md-2 rounded p-2"
                   style="background-color: #5d87fe"
                 ></div>
                 <div
                   id="Export_Excel"
-                  class="col-md-2 rounded text-center"
+                  class="col-md-2 rounded text-center p-2"
                   style="
                     background-color: #5d87fe;
                     display: flex;
@@ -614,9 +581,8 @@
             `);
           } else {
             $("#days-count").html(`
-          <img src="../src/assets/images/image/calendar1.png" class="card-img-top mt-2" alt="..." style="max-width: 25px; height: auto;">
-          <h3 class="card-text m-2" style="color: white;">${data.todaycount}</h3>
-          <h5 class="card-text m-2" style="color: white;">รายการจำนำวันนี้</h5>
+          <h3 class="card-text" style="color: white;">${data.todaycount}</h3>
+          <h5 class="card-text px-3" style="color: white;">วันนี้</h5>
             `);
           }
         };
@@ -655,9 +621,8 @@
             `);
           } else {
             $("#all-count").html(`
-          <img src="../src/assets/images/image/all1.png" class="card-img-top mt-2" alt="..." style="max-width: 25px; height: auto;">
-          <h3 class="card-text m-2" style="color: white;">${data.allcount}</h3>
-          <h5 class="card-text m-2" style="color: white;">รายการทั้งหมด</h5>
+          <h3 class="card-text" style="color: white;">${data.allcount}</h3>
+          <h5 class="card-text px-1" style="color: white;">ทั้งหมด</h5>
           `);
           }
         };
@@ -680,11 +645,10 @@
             $("#Export_Excel").html(`
             <div class="image-container">
               <a href="../excel/create_excel_mysql.php" style="display: block;">
-                <img src="../src/assets/images/image/pngwing1.png" alt="Export" class="default-image"/>
+                <img src="../src/assets/images/image/pngwing1.png" alt="Export" class="default-image "/>
                 <img src="../src/assets/images/image/file-arrow-right1.png" alt="Hover" class="hover-image"/>
               </a>
             </div>
-            <h5 class="card-text mt-2" style="color: ;">Export Excel</h5>
           `);
           }
         };
@@ -694,8 +658,10 @@
         $(window).resize(function () {
           $("#days-count").empty();
           $("#all-count").empty();
+          $("#Export_Excel").empty();
           todayItemCount();
           allItemCount();
+          excelExport();
         });
 
         todayItemCount();
