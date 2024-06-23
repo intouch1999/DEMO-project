@@ -13,23 +13,21 @@ if (@$decode['case'] == "items") {
         $query = "SELECT * FROM `insert_items` ORDER BY item_id DESC LIMIT $itemsPerPage OFFSET $offset";
         $stmt = $conn->query($query);
         
+        $data = [];
         if ($stmt->rowCount() > 0) {
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $data[] = $row;
             }
+            $data[0]['status'] = 1; // มีข้อมูล
         } else {
-            $data = [];
+            $data[] = ['status' => 0]; // ไม่มีข้อมูล
         }
-        $data[0]['status'] = 1;
     } catch (PDOException $e) {
-        $data['error_message'] = $e->getMessage();
-    }
-
-    if (!isset($data)) {
-        $data = ['status' => 0]; 
+        $data = ['error_message' => $e->getMessage()];
     }
 
     echo json_encode($data);
+
 
 } else if (@$decode['case'] == "DayCount") {
     try {
