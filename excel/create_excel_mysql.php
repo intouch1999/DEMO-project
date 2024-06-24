@@ -16,9 +16,9 @@ $sheet = $spreadsheet->getActiveSheet();
 $sheet->setCellValue('A1', 'รหัสสินค้า');
 $sheet->setCellValue('B1', 'ชื่อสินค้า');
 $sheet->setCellValue('C1', 'ประเภทสินค้า');
-$sheet->setCellValue('D1', 'ราคาสินค้า');
+$sheet->setCellValue('D1', 'ราคาจำนำ');
 $sheet->setCellValue('E1', 'ดอกเบี้ย');
-$sheet->setCellValue('F1', 'ราคารวมดอก');
+$sheet->setCellValue('F1', 'ราคาไถ่ดอก');
 $sheet->setCellValue('G1', 'วันครบกำหนดชำระ');
 $sheet->setCellValue('H1', 'วันที่สร้างรายการ');
 

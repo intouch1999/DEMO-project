@@ -67,9 +67,13 @@ if (isset($_GET['item_id'])) {
         // Row with left and right aligned text
         $pdf->SetFont(THSarabunNew, '', 16);
         $pdf->SetX(11);
-        $pdf->Cell(0, 0, 'เลขที่สัญญา ' . $item_id, 0, 0, 'L');
+        $pdf->Cell(0, 0, 'เลขที่สัญญา ', 0, 0, 'L');
+        $pdf->SetFont(THSarabunNew, 'B', 16);
+        $pdf->SetX(30);
+        $pdf->Cell(0, 0, $item_id, 0, 0, 'L');
+        $pdf->SetFont(THSarabunNew, '', 16);
         $pdf->SetX(120);
-        $pdf->Cell(0, 0, 'ทำที่สำนักงานใหญ่', 0, 1, 'J');
+        $pdf->Cell(0, 0, 'ทำที่ สำนักงานใหญ่', 0, 1, 'L');
         $pdf->Ln(5);
 
         function thaiMonth($month) {
@@ -104,7 +108,7 @@ if (isset($_GET['item_id'])) {
         }
         
 
-        $pdf->SetFont(THSarabunNew, '', 16);
+        $pdf->SetFont(THSarabunNew, 'B', 16);
         $pdf->SetX(100);
         $month = date('F', strtotime($item['item_d_create']));
         $thai_month = thaiMonth($month);
@@ -267,12 +271,12 @@ if (isset($_GET['item_id'])) {
 }
 
         </style>
-        <p>1) ผู้ขายฝากตกลงขายฝากและผู้ซื้อฝากกตกลกรับซื้อฝาก '.($item['item_name']).' 
-        <br>ซึ่งเป็นกรรมสิทธิ์ของผู้ขายฝากเป็นจำนวนเงินทั้งสิ้น '.number_format($item['item_price'] , 2).' บาท ('.Convert(($item['item_price'])).')</p>
+        <p>1) ผู้ขายฝากตกลงขายฝากและผู้ซื้อฝากกตกลกรับซื้อฝาก <b>'.($item['item_name']).'</b> 
+        <br>ซึ่งเป็นกรรมสิทธิ์ของผู้ขายฝากเป็นจำนวนเงินทั้งสิ้น <b>'.number_format($item['item_price'] , 2).' บาท ('.Convert(($item['item_price'])).')</b></p>
         <p>2) ในระว่างที่อยู่ในระยะเวลาแห่งการไถ่ทรัพย์สินที่ขายฝาก ผู้ซื้อฝากจะไม่ดำเนินการเกี่ยวกับนิติกรรมใดๆ บนทรัพย์สิน
         <br>ที่รับซื้อฝากมานั้น</p>
-        <p>3) ผู้ซื้อฝากตกลงให้ผู้ขายฝากทำการไถ่ทรัพย์สินที่ขายฝากได้ภายใน '.$expressed_date.' โดยกำหนดสินไถ่ไว้เป็นเงินจำนวน
-        <br>'.number_format($price_interest , 2).' บาท ('.$price_interest_formatTH.') </p>
+        <p>3) ผู้ซื้อฝากตกลงให้ผู้ขายฝากทำการไถ่ทรัพย์สินที่ขายฝากได้ภายใน <b>'.$expressed_date.'</b> โดยกำหนดสินไถ่ไว้เป็นเงินจำนวน
+        <br><b>'.number_format($price_interest , 2).' บาท ('.$price_interest_formatTH.')</b> </p>
         <p>4) ค่าฤชาธรรมเนียมในการขายฝาก และค่าฤชาธรรมเนียมในการไถ่ทรัพย์สินที่ขายฝากนั้น ผู้ขายฝากเป็นผู้รับภาระทั้งสิ้น</p>
         <p>5) ทรัพย์สินไุถ่นั้นจะต้องส่งคืนตามสภาพที่เป้นอยู๋ ณ เวลาที่ทำการไถ่ ถ้าหากทรัพย์สินนั้นถูกทำลายหรือทำให้เสื่อมเสียไป
         <br>เพราะความผิดของผู้ซื้อฝาก ผู้ซื้อฝากต้องชดใช้ค่าสินไหมทดแทนในความเสียหายนั้นให้แก่ผู้ขายฝาก</p>
