@@ -651,32 +651,30 @@
 
         const per_interest = (number, rate) => {
           let num = number * (rate / 100);
-          numberFormate = formatNumberWithCommas(num.toFixed(2));
+          numberFormate = formatNumberWithCommas(num);
           return numberFormate;
         };
 
         const priceWinterest = (number, rate) => {
           let num = number * (rate / 100) + number;
-          numberFormate = formatNumberWithCommas(num.toFixed(2));
+          numberFormate = formatNumberWithCommas(num);
           return numberFormate;
         };
         const date_interest = (day, dayExpred) => {
-    let startDate = new Date(); // ใช้วันที่ปัจจุบัน
-    let secDate = new Date(day);
-    let futureDate = new Date(startDate); // สร้างวัตถุ Date สำหรับวันที่ในอนาคต
-    futureDate.setDate(secDate.getDate() + dayExpred);
+          let startDate = new Date(); // ใช้วันที่ปัจจุบัน
+          let date = new Date(day);
+          date.setDate(date.getDate() + dayExpred);
 
-    let timeDiff = futureDate.getTime() - startDate.getTime();
-    let differenceInDays = Math.round(timeDiff / (1000 * 3600 * 24));
+          let timeDiff = date.getTime() - startDate.getTime();
+          let differenceInDays = Math.round(timeDiff / (1000 * 3600 * 24));
 
-    console.log(futureDate);
 
-          if (differenceInDays < 0) {
-              return `<span style="color: red;">${differenceInDays}</span>`;
-          } else {
-              return differenceInDays;
-          }
-      };
+                if (differenceInDays < 0) {
+                    return `<span style="color: red;">${differenceInDays}</span>`;
+                } else {
+                    return differenceInDays;
+                }
+            };
 
 
 

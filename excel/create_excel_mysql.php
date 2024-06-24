@@ -40,7 +40,8 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $sheet->setCellValue('C' . $rowNum, $row['item_type']);
     // $sheet->setCellValue('D' . $rowNum, $row['item_price'])->getStyle('D' . $rowNum)->getNumberFormat()->setFormatCode('฿#,##0.00;-฿#,##0.00');
     $sheet->setCellValue('D' . $rowNum, $row['item_price'])->getStyle('D' . $rowNum)->getNumberFormat()->setFormatCode('#,##0.00');
-    $sheet->setCellValue('E' . $rowNum, "0.".$row['item_interest'])->getStyle('E' . $rowNum)->getNumberFormat()->setFormatCode('0.0%');
+    $sheet->setCellValue('E' . $rowNum, $row['item_interest']."%");
+    //$sheet->setCellValue('E' . $rowNum, "0.0".$row['item_interest'])->getStyle('E' . $rowNum)->getNumberFormat()->setFormatCode('0.0%');
     $sheet->setCellValue('F' . $rowNum, $row['item_price'] + interest($row['item_price'], $row['item_interest']));
     $sheet->getStyle('F' . $rowNum)->getNumberFormat()->setFormatCode('#,##0.00');
     
