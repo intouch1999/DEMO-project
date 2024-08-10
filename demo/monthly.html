@@ -254,7 +254,12 @@
       width: 100%;
     }
 
-.sidebar-nav li .dropdown{ 
+    #chart_daily_quantity_hour {
+      min-width: 750px;
+      width: 100%;
+    }
+
+    .sidebar-nav li .dropdown{ 
 	list-style: none; 
 	margin: 0; 
 	padding: 0; 
@@ -264,7 +269,6 @@
 .table > :not(caption) > * > * {
         padding: 5px;
       }
-
       .sidebar-nav ul .sidebar-item.selected > .sidebar-link,
 .sidebar-nav ul .sidebar-item.selected > .sidebar-link.active,
 .sidebar-nav ul .sidebar-item > .sidebar-link.active,
@@ -274,7 +278,6 @@
   color: white;
   background: #5D87FF;
 }
-
   </style>
 </head>
 
@@ -316,8 +319,6 @@
                 <li class="sidebar-item"><a class="sidebar-link" href="./monthly.html" id="link-monthly" aria-expanded="false"> รายเดือน </a></li>
               </ul>
             </li>
-            
-        
             <li class="sidebar-item">
               <a class="sidebar-link" href="./product_list.html" aria-expanded="false">
                 <span>
@@ -408,10 +409,10 @@
       <div class="container-fluid">
         <div class="row d-flex align-items-center">
           <div class="col-sm-6 mb-3 align-self-center">
-        <h3>ข้อมูลประจำวันที่</h3>
+        <h3>ข้อมูลประจำเดือนที่</h3>
       </div>
         <div class="col-sm-6 mb-3 align-self-center ">
-        <input type="date" class="form-control" id="date" value="" onchange="call_data();">
+        <input type="month" class="form-control" id="select_month" value="" onchange="call_data();">
           </div>
         </div>
         <div class="row d-flex">
@@ -419,17 +420,16 @@
           <div class="col-sm-6 d-flex align-items-stretch">
             <div class="card w-100">
               <div class="card-body p-3">
-                <div class="d-flex d-block align-items-center">
+                <div class="d-flex d-block align-items-center justify-content-between">
                   <div class="mb-3 mb-sm-0">
-                  <h5 class="col card-title fw-semibold" id="date_1">
-                    จำนวนสัญญา วันที่
-                  </h5>
+                    <h5 class="card-title fw-semibold" id="date_1">
+                      จำนวนสัญญา
+                    </h5>
+                  </div>
                 </div>
-                </div>
-                
                 <div class="d-flex d-block align-items-center justify-content-around">
                 <h1><i class="ti ti-license"></i></h1>
-                <h1 id="today"></h1>
+                <h1 id="monthly"></h1>
                 </div>
               </div>
             </div>
@@ -447,7 +447,7 @@
                 </div>
                 <div class="d-flex d-block align-items-center justify-content-around">
                   <h1><i class="ti ti-currency-baht"></i></h1>
-                <h1 id="today_price"></h1>
+                <h1 id="price_month"></h1>
                 </div>
               </div>
             </div>
@@ -458,16 +458,16 @@
         <div class="card shadow-lg w-100">
           <h5 class="card-title fw-semibold p-4 pb-0" id="date_3">ยอดฝาก 5 อันดับ</h5>
           <div class="row">
-            <div id="today_top5" class="col-lg-12 d-flex align-items-center text-center p-4 pb-0">
+            <div id="top5_monthly" class="col-lg-12 d-flex align-items-center text-center p-4 pb-0">
 
             </div>
           </div>
         </div>
         </div>
-        </div>
+        </div>        
         <div class="card shadow-lg">
           <div class="row">
-            <h5 class="card-title fw-semibold p-4">Dashboard รายวัน</h5>
+            <h5 class="card-title fw-semibold p-4">Dashboard รายเดือน</h5>
           </div>          
           <div class="row">
             <!-- daily_quantity-->
@@ -480,11 +480,38 @@
                     </div>
                   </div>
                   <div id="box_chart_daily_quantity">
-                    <div id="chart_daily_quantity"></div>
+                    <div id="chart_daily_quantity_hour"></div>
                   </div>
                 </div>
               </div>
             </div>
+              <!-- daily_quantity-->
+              <div class="col-lg-12 d-flex align-items-strech">
+                <div class="card w-100">
+                  <div class="card-body">
+                    <div class="d-sm-flex d-block align-items-center justify-content-between">
+                      <div class="mb-3 mb-sm-0">
+                        <h5 class="card-title fw-semibold" id="date_5">ยอดสินค้ารับฝากแยกรายวัน</h5>
+                      </div>
+                      <!-- <div>
+                        <select class="form-select" id="select_month">
+                          <option value="2024-01">มกราคม 2566</option>
+                          <option value="2024-02">กุมพาพันธ์ 2566</option>
+                          <option value="2024-03">มีนาคม 2566</option>
+                          <option value="2024-04">เมษายน 2566</option>
+                          <option value="2024-05">พฤษภาคม 2566</option>
+                          <option value="2024-06" selected>มิถุนายน 2566</option>
+                          <option value="2024-07">กรกฎาคม 2566</option>
+                        </select>
+                      </div> -->
+                    </div>
+                    <div id="box_chart_daily_quantity">
+                      <div id="chart_daily_quantity"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            
           </div>
         </div>
       </div>
@@ -503,22 +530,21 @@
 <script>
 
   $(function () { //preload function
-    DATE_now();
+    month_now();
     call_data();
-    
   });
 
 
   function call_data() {
-    const daily_select = $("#date").val(); //Get value from elements
-    fetch("../api/dashboard.php?case=daily_data", {
+    const month_select = $("#select_month").val(); //Get value from elements
+    fetch("../api/dashboard.php?case=monthly_data", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        case: "daily_data",
-        daily_select: daily_select
+        case: "monthly_data",
+        month_select: month_select
       }),
     })
       .then((res) => {
@@ -529,9 +555,10 @@
       })
       .then((data) => {
         chart_daily(data.chart_daily , data.count_max);
-        TODAY(data.item_today);
-        SUM_price_today(data.today_price);
-        TOP5_today(data.today_catagory_product);
+        chart_daily_hour(data.chart_hour , data.count_max_hour);
+        MONTHLY(data.item_month);
+        SUM_price_month(data.price_month);
+        TOP5_month(data.catagory_product_month);
         getDateValue();
       })
       .catch((err) => {
@@ -541,8 +568,9 @@
 
   }
 
-  function chart_daily(val , count_max) {
-    $("#chart_daily_quantity").empty(); //clear chart first  
+
+  function chart_daily_hour( val , count_max ) {
+    $("#chart_daily_quantity_hour").empty(); //clear chart first  
     //Set up chart value and properties 
     let array_day = [];
     let array_total = [];
@@ -554,9 +582,8 @@
 
     let maxQuantity = (count_max && count_max[0] && count_max[0]['total_count'] != null && count_max[0]['total_count'] != 0) 
     ? parseInt(count_max[0]['total_count'])+3
-    : 3;
+    : 10;
 
-    console.log(maxQuantity);
     var chart = {
       xaxis: {
         type: "category",
@@ -575,7 +602,7 @@
 
       chart: {
         type: "bar",
-        height: 345,
+        height: 350,
         offsetX: -15,
         toolbar: { show: true },
         foreColor: "#adb0bb",
@@ -613,7 +640,6 @@
           },
         },
       },
-      
       yaxis: {
         show: true,
         min: 0,
@@ -627,7 +653,118 @@
       },
       stroke: {
         show: true,
-        width: 30,
+        width: 25,
+        lineCap: "butt",
+        colors: ["transparent"],
+      },
+
+
+      tooltip: { theme: "light" },
+
+      responsive: [
+        {
+          breakpoint: 100,
+          options: {
+            plotOptions: {
+              bar: {
+                borderRadius: 3,
+              }
+            },
+          }
+        }
+      ]
+    };
+
+
+    var chart = new ApexCharts(document.querySelector("#chart_daily_quantity_hour"), chart);
+    chart.render();
+  }
+
+  function chart_daily(val , count_max) {
+    $("#chart_daily_quantity").empty(); //clear chart first  
+    //Set up chart value and properties 
+    let array_day = [];
+    let array_total = [];
+
+    val.forEach(elm => {
+      array_day.push(elm['day']);
+      array_total.push(elm['total_product']);
+    });
+
+    let maxQuantity = (count_max && count_max[0] && count_max[0]['daily_quantity'] != null && count_max[0]['daily_quantity'] != 0) 
+    ? parseInt(count_max[0]['daily_quantity'])+3
+    : 5;
+
+    var chart = {
+      xaxis: {
+        type: "category",
+        categories: array_day,
+        labels: {
+          style: { cssClass: "grey--text lighten-2--text fill-color" },
+        },
+      },
+
+      series: [
+        {
+          name: "จำนวนสัญญา : "
+          , data: array_total
+        },
+      ],
+
+      chart: {
+        type: "bar",
+        height: 345,
+        offsetX: -15,
+        toolbar: { show: true },
+        foreColor: "#adb0bb",
+        fontFamily: 'inherit',
+        sparkline: { enabled: false },
+      },
+
+      colors: ["#5eab59", "#5eab59"],
+
+      plotOptions: {
+        bar: {
+          horizontal: false,
+          columnWidth: "35%",
+          borderRadius: [3],
+          borderRadiusApplication: 'end',
+          borderRadiusWhenStacked: 'all'
+        },
+      },
+      markers: { size: 0 },
+
+      dataLabels: {
+        enabled: true,
+      },
+
+      legend: {
+        show: false,
+      },
+
+      grid: {
+        borderColor: "rgba(0,0,0,0.1)",
+        strokeDashArray: 3,
+        xaxis: {
+          lines: {
+            show: false,
+          },
+        },
+      },
+      yaxis: {
+        show: true,
+        min: 0,
+        max: maxQuantity,
+        tickAmount: maxQuantity,
+        labels: {
+          style: {
+            cssClass: "grey--text lighten-2--text fill-color",
+          },
+        },
+      },
+      stroke: {
+        show: true,
+        width: 20,
         lineCap: "butt",
         colors: ["transparent"],
       },
@@ -654,20 +791,17 @@
     chart.render();
   };
 
-//item_today
-function TODAY(today) {
-  today.forEach(elm => {
-    $("#today").html(`${elm['item_today']}`);
+function MONTHLY(monthly) {
+  monthly.forEach(elm => {
+    $("#monthly").html(`${elm['item_month']}`);
   });
 }
 
-//sun_price_today
-function SUM_price_today(today_price) {
-  $("#today_price").html(`${today_price}`);
+function SUM_price_month(price_month) {
+  $("#price_month").html(`${price_month}`);
 }
 
-//top5 today 
-function TOP5_today(type) {
+function TOP5_month(type) {
     let rows = '';
 
     // ตรวจสอบถ้า type เป็น null หรือไม่ได้กำหนดค่า
@@ -714,7 +848,7 @@ function TOP5_today(type) {
                     <tr>
                         <td>${type[i]['item_type']}</td>
                         <td>${type[i]['total']}</td>
-                        <td>${type[i]['today_top5_price']}</td>
+                        <td>${type[i]['top5_price_month']}</td>
                     </tr>
                 `;
             } else {
@@ -730,7 +864,7 @@ function TOP5_today(type) {
     }
 
     // แสดงผลในตาราง
-    $("#today_top5").html(`
+    $("#top5_monthly").html(`
         <table class="table">
             <thead>
                 <tr>
@@ -810,25 +944,27 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 });
   
-//date now
-function DATE_now() {
-  let today = new Date();
-  $("#date").val(today.toISOString().substring(0, 10));
+function month_now() {
+  let date = new Date();
+  let month = ("0" + (date.getMonth() + 1)).slice(-2); // Get month with leading zero if necessary
+  let year = date.getFullYear();
+  let formattedMonthYear = `${year}-${month}`; // Format as YYYY-MM for input type month
+  $("#select_month").val(formattedMonthYear);
 }
+
 function getDateValue() {
-  let dateInput = document.getElementById("date");
+  let dateInput = document.getElementById("select_month");
+  console.log(dateInput);
 
   let selectedDate = dateInput.value;
   //formate dd//mm/yyyy
   let formattedDate = selectedDate.split("-").reverse().join("/");
 
-  $("#date_1").html("จำนวนสัญญา วันที่ " + formattedDate);
-  $("#date_2").html("ยอดฝาก วันที่ " + formattedDate);
-  $("#date_3").html("ยอดฝาก 5 อันดับ วันที่ " + formattedDate);
-  $("#date_4").html("ยอดสินค้ารับฝากแยกรายชั่วโมง วันที่ " + formattedDate);
+  $("#date_1").html("จำนวนสัญญา เดือนที่ " + formattedDate);
+  $("#date_2").html("ยอดฝาก เดือนที่ " + formattedDate);
+  $("#date_3").html("ยอดฝาก 5 อันดับ เดือนที่  " + formattedDate);
+  $("#date_4").html("ยอดสินค้ารับฝากแยกรายชั่วโมง เดือนที่  " + formattedDate);
+  $("#date_5").html("ยอดสินค้ารับฝากแยกรายวัน เดือนที่  " + formattedDate);
 }
-
-
-
 
 </script>

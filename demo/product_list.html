@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>thunder-cash</title>
+    <link
+      rel="shortcut icon"
+      type="image/png"
+      href="../src/assets/images/logos/favicon.png"
+    />
+    <link rel="stylesheet" href="../src/assets/css/styles.min.css" />
+    <style>
+      body {
+        background-color: aliceblue;
+      }
+
+      .img-fluid.rounded {
+        transition: transform 0.3s ease;
+      }
+
+      .img-fluid.rounded:hover {
+        transform: scale(1.5);
+      }
+
+      .img-fluid-download {
+        transition: transform 0.3s ease;
+      }
+
+      .img-fluid-download:hover {
+        transform: scale(1.2);
+      }
+
+      .card {
+        transition: transform 0.2s ease, background-color 0.2s ease;
+      }
+
+      .card-body.d-flex.justify-content-between.align-items-center {
+        transition: transform 0.2s ease, background-color 0.2s ease;
+      }
+
+      .card-body.d-flex.justify-content-between.align-items-center:hover {
+        transform: scale(1.02);
+        background-color: #f8f9fa;
+      }
+
+      .card.col-md-4.shadow-lg.rounded-pill {
+        transition: transform 0.2s ease, background-color 0.2s ease;
+      }
+
+      .card.col-md-4.shadow-lg.rounded-pill:hover {
+        transform: scale(1.02);
+      }
+
+      .app-header {
+        position: fixed;
+        width: 100%;
+        transition: transform 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        z-index: 1000;
+      }
+
+      .app-header.hidden {
+        transform: translateY(-100%);
+        visibility: hidden;
+      }
+
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      .clickable-image {
+        border-radius: 5px;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      .clickable-image:hover {
+        opacity: 0.7;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 999;
+        padding-top: 100px;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgb(0, 0, 0);
+        background-color: rgba(0, 0, 0, 0.9);
+      }
+
+      .modal-content {
+        margin: auto;
+        display: block;
+        max-width: 90%;
+        max-height: 90%;
+        width: auto;
+        height: auto;
+      }
+
+      #caption {
+        margin: auto;
+        display: block;
+        width: 80%;
+        max-width: 700px;
+        text-align: center;
+        color: #ccc;
+        padding: 10px 0;
+        height: 150px;
+      }
+
+      .modal-content,
+      #caption {
+        -webkit-animation-name: zoom;
+        -webkit-animation-duration: 0.6s;
+        animation-name: zoom;
+        animation-duration: 0.6s;
+      }
+
+      @-webkit-keyframes zoom {
+        from {
+          -webkit-transform: scale(0);
+        }
+
+        to {
+          -webkit-transform: scale(1);
+        }
+      }
+
+      @keyframes zoom {
+        from {
+          transform: scale(0);
+        }
+
+        to {
+          transform: scale(1);
+        }
+      }
+
+      .close {
+        position: absolute;
+        top: 15px;
+        right: 35px;
+        color: #f1f1f1;
+        font-size: 40px;
+        font-weight: bold;
+        transition: 0.3s;
+      }
+
+      .close:hover,
+      .close:focus {
+        color: #bbb;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      @media only screen and (max-width: 700px) {
+        .modal-content {
+          width: 100%;
+        }
+      }
+
+      .image-container {
+        position: relative;
+        width: 50px;
+        height: 50px;
+      }
+
+      .image-container img {
+        width: 100%;
+        height: 100%;
+        transition: opacity 0.5s ease;
+      }
+
+      .image-container .hover-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+      }
+
+      #Export_Excel:hover .default-image {
+        opacity: 0;
+      }
+
+      #Export_Excel:hover .hover-image {
+        opacity: 1;
+      }
+
+      .col-md-2 {
+        transition: transform 0.2s ease, background-color 0.2s ease;
+      }
+
+      .col-md-2:hover {
+        transform: scale(1.1);
+        box-shadow: 0px 1rem 3rem 0px rgb(3 95 251 / 25%) !important;
+      }
+
+      td {
+        position: relative;
+      }
+
+      td:hover::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background-color: #18272f;
+        --bs-table-hover-color: #0059ef;
+      }
+
+      .table {
+        --bs-table-hover-color: #0059ef;
+      }
+
+      .table > :not(caption) > * > * {
+        padding: 12px;
+      }
+
+
+      .sidebar-nav li .submenu{ 
+	list-style: none; 
+	margin: 0; 
+	padding: 0; 
+	padding-left: 1rem; 
+	padding-right: 1rem;
+}
+
+.bg-light {
+  --bs-bg-opacity: 1;
+  background-color: #8C8C8C !important;
+}
+
+.bg-success {
+  --bs-bg-opacity: 1;
+  background-color: #01b662 !important;
+}
+
+.bg-danger {
+  --bs-bg-opacity: 1;
+  background-color: #FF3500 !important;
+}
+    </style>
+  </head>
+
+  <body>
+    <!--  Body Wrapper -->
+    <div
+      class="page-wrapper"
+      id="main-wrapper"
+      data-layout="vertical"
+      data-navbarbg="skin6"
+      data-sidebartype="full"
+      data-sidebar-position="fixed"
+      data-header-position="fixed"
+    >
+      <!-- put nav here -->
+<!-- Sidebar Start -->
+<aside class="left-sidebar">
+  <!-- Sidebar scroll-->
+  <div>
+    <div class="brand-logo d-flex align-items-center" >
+      <a href="./index.html" class="text-nowrap logo-img">
+        <h3 class="text-center d-flex align-items-center">
+          <script src="https://cdn.lordicon.com/lordicon.js"></script>
+<lord-icon
+    src="https://cdn.lordicon.com/vyqvtrtg.json"
+
+    style="width:50px;height:50px"
+
+    >
+
+</lord-icon> thunder-cash
+
+        </h3>
+      </a>
+      <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
+        <i class="ti ti-x fs-8"></i>
+      </div>
+    </div>
+    <!-- Sidebar navigation-->
+    <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
+      <ul id="sidebarnav">
+        <li class="nav-small-cap">
+          
+          <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+          <span class="hide-menu">Home</span>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="#"> Dashboard </a>
+          <ul class="submenu collapse">
+            <li class="sidebar-item"><a class="sidebar-link" href="./index.html" aria-expanded="false"> รายวัน </a></li>
+            <li class="sidebar-item"><a class="sidebar-link" href="./monthly.html" aria-expanded="false"> รายเดือน </a></li>
+          </ul>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="./product_list.html" aria-expanded="false">
+            <span>
+              <i class="ti ti-home"></i>
+            </span><span class="hide-menu">รายการฝาก</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="./forms.html" aria-expanded="false">
+            <span>
+              <i class="ti ti-book-upload"></i>
+            </span>
+          <span class="hide-menu">เพิ่มสินค้า</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="../excel/create_excel_mysql.php" aria-expanded="false">
+            <span>
+              <i class="ti ti-file-spreadsheet"></i>
+            </span>
+          <span class="hide-menu">Excel</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <!-- End Sidebar navigation -->
+  </div>
+  <!-- End Sidebar scroll-->
+</aside>
+<!--  Sidebar End -->
+      <div id="navbar"></div>
+      <!--  Main wrapper -->
+      <div class="body-wrapper">
+        <!--  Header Start -->
+
+        <!-- put header here -->
+        <header class="app-header">
+          <nav class="navbar navbar-expand-lg navbar-light">
+            <ul class="navbar-nav">
+              <li class="nav-item d-block d-xl-none">
+                <a class="nav-link sidebartoggler nav-icon-hover" id="headerCollapse" href="javascript:void(0)">
+                  <i class="ti ti-menu-2"></i>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link nav-icon-hover" href="javascript:void(0)">
+                  <i class="ti ti-bell-ringing"></i>
+                  <div class="notification bg-primary rounded-circle"></div>
+                </a>
+              </li>
+            </ul>
+            <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
+              <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+                <li class="nav-item dropdown">
+                  <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    <img src="../src/assets/images/profile/user-1.jpg" alt="" width="35" height="35" class="rounded-circle">
+                  </a>
+                  <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
+                    <div class="message-body">
+                      <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                        <i class="ti ti-user fs-6"></i>
+                        <p class="mb-0 fs-3">My Profile</p>
+                      </a>
+                      <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                        <i class="ti ti-mail fs-6"></i>
+                        <p class="mb-0 fs-3">My Account</p>
+                      </a>
+                      <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                        <i class="ti ti-list-check fs-6"></i>
+                        <p class="mb-0 fs-3">My Task</p>
+                      </a>
+                      <a href="./authentication-login.html" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </nav>
+        </header>
+        
+        <div id="header"></div>
+        <!--  Header End -->
+        <div class="container-fluid">
+          <div class="card shadow-lg">
+            <div
+              class="card-body large-card rounded"
+              style="border: 1px solid rgb(229, 234, 239)"
+            >
+              <h5 class="card-title fw-semibold mb-4">รายการฝากสินค้า</h5>
+              <div
+                class="d-flex justify-content-around flex-wrap text-center gap-3"
+              >
+                <div
+                  id="days-count"
+                  class="col-md-2 rounded p-2"
+                  style="background-color: #5d87fe"
+                ></div>
+                <div
+                  id="all-count"
+                  class="col-md-2 rounded p-2"
+                  style="background-color: #5d87fe"
+                ></div>
+                <!-- <div
+                  id="Export_Excel"
+                  class="col-md-2 rounded text-center p-2"
+                  style="
+                    background-color: #5d87fe;
+                    display: flex;
+                    flex-direction: column;
+                    column-gap: 10px;
+                    justify-content: center;
+                    align-items: center;
+                    padding: 10px;
+                  "
+                ></div> -->
+              </div>
+              <div id="list-menu" class="container mt-4">
+                <!-- Table will be dynamically added here -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+      <span class="close">&times;</span>
+      <img class="modal-content" id="img01" />
+    </div>
+    <script src="../src/assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="../src/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../src/assets/js/sidebarmenu.js"></script>
+    <script src="../src/assets/js/app.min.js"></script>
+    <script src="../src/assets/libs/simplebar/dist/simplebar.js"></script>
+    <script>
+      $(document).ready(function () {
+
+
+        function fetchItems(page) {
+          return fetch(`../api/select_item.php?case=items&page=${page}`, {
+            method: "POST",
+            body: JSON.stringify({
+              case: "items",
+            }),
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Network response was not ok");
+              }
+              return response.json();
+            })
+            .catch((error) => {
+              console.error("Error fetching items:", error);
+            });
+        }
+
+        function renderTableRow(item) {
+          $("#item-table tbody").append(`
+                <tr>
+                  <td class="text-center"><img src="../src/assets/images/product/${item.item_pic}" class="img-fluid rounded clickable-image" style="max-width: 50px; height: auto;" alt="${item.item_name}" onerror="this.src='../src/assets/images/image/no-pig.jpg'; this.alt='Default Image';"></td>
+                  <td class="text-center">${item.item_id}</td>
+                  <td class="text-center">${item.item_name}</td>
+                  <td class="text-center">${item.item_type}</td>
+                  <td class="text-center">${formatNumberWithCommas(item.item_price)}.-</td>
+                  <td class="text-center text-nowrap">${item.item_interest} %</td>
+                  <td class="text-center">${per_interest(item.item_price,item.item_interest)}.-</td>
+                  <td class="text-center">${priceWinterest(item.item_price,item.item_interest)}.-</td>
+                  <td class="text-center">${addDATE(item.item_d_create,item.item_d_interest)}</td>
+                  <td class="text-center">${date_interest(item.item_d_create,item.item_d_interest )}</td>
+                  <td class="text-center">
+                      <a href="../pdf/pdf.php?item_id=${item.item_id}" target="_blank">
+                      <i class="ti ti-file-spreadsheet" style="font-size: 20px;"></i>
+                      </a>
+                  </td>
+                </tr>
+            `);
+        }
+
+        //     function renderTableRow(item) {
+        //       const screenWidth = $(window).width();
+        //       const imageColumn = `
+        //     <td class="text-center"><img src="../src/assets/images/product/${item.item_pic}" class="img-fluid rounded clickable-image" style="max-width: 20px; height: auto;" alt="${item.item_name}"></td>
+        // `;
+
+        //       // Check if screen width is less than 768px
+        //       if (screenWidth < 768) {
+        //         $("#item-table tbody").append(`
+        //         <tr class="mobile-view">
+        //             ${imageColumn}
+        //             <td class="mobile-details" colspan="2">
+        //                 <div><strong>รหัสสินค้า:</strong> ${item.item_id}</div>
+        //                 <div><strong>ชื่อสินค้า:</strong> ${item.item_name}</div>
+        //                 <div><strong>ประเภท:</strong> ${item.item_type}</div>
+        //                 <div><strong>ราคา:</strong> ${formatNumberWithCommas(
+        //                   item.item_price
+        //                 )} บาท</div>
+        //                 <div><strong>ดอกเบี้ย:</strong> ${per_interest(
+        //                   item.item_price,
+        //                   item.item_interest
+        //                 )} บาท</div>
+        //                 <div><strong>วันที่สร้าง:</strong> ${addDATE(
+        //                   item.item_d_create,
+        //                   item.item_d_interest
+        //                 )}</div>
+        //                 <div><strong>วันที่เปลี่ยนแปลง:</strong> ${changeformate(
+        //                   item.item_d_create
+        //                 )}</div>
+        //             </td>
+        //             <td class="text-center">
+        //                 <a href="../pdf/pdf.php?item_id=${
+        //                   item.item_id
+        //                 }" target="_blank">
+        //                     <img src="../src/assets/images/image/download.png" class="img-fluid-download rounded" style="max-width: 20px; height: auto;" alt="download">
+        //                 </a>
+        //             </td>
+        //         </tr>
+        //     `);
+        //       } else {
+        //         // Default rendering for screen width >= 768px
+        //         $("#item-table tbody").append(`
+        //         <tr>
+        //             ${imageColumn}
+        //             <td class="text-center">${item.item_id}</td>
+        //             <td class="text-center">${item.item_name}</td>
+        //             <td class="text-center">${item.item_type}</td>
+        //             <td class="text-center">${formatNumberWithCommas(
+        //               item.item_price
+        //             )} บาท</td>
+        //             <td class="text-center">${per_interest(
+        //               item.item_price,
+        //               item.item_interest
+        //             )} บาท</td>
+        //             <td class="text-center">${addDATE(
+        //               item.item_d_create,
+        //               item.item_d_interest
+        //             )}</td>
+        //             <td class="text-center">${changeformate(
+        //               item.item_d_create
+        //             )}</td>
+        //             <td class="text-center">
+        //                 <a href="../pdf/pdf.php?item_id=${
+        //                   item.item_id
+        //                 }" target="_blank">
+        //                     <img src="../src/assets/images/image/download.png" class="img-fluid-download rounded" style="max-width: 20px; height: auto;" alt="download">
+        //                 </a>
+        //             </td>
+        //         </tr>
+        //     `);
+        //       }
+        //     }
+
+        function handleFetchAndRender() {
+          let page = 1;
+          let isFetching = false;
+          let isLastPage = false;
+
+          function fetchAndRender() {
+            if (isFetching || isLastPage) return;
+            isFetching = true;
+
+            fetchItems(page)
+              .then((data) => {
+                if (!data || data.length === 0 || data[0].status === 0) {
+                  isLastPage = true;
+                  return;
+                }
+
+                data.forEach((item) => {
+                  renderTableRow(item);
+                });
+                page++;
+                isFetching = false;
+              })
+              .catch((error) => {
+                console.error("Error fetching items:", error);
+                isFetching = false;
+              });
+          }
+
+          fetchAndRender();
+
+          $(window).scroll(function () {
+            if (
+              $(window).scrollTop() + $(window).height() >=
+              $(document).height() - 200
+            ) {
+              fetchAndRender();
+            }
+          });
+        }
+
+        $("#list-menu").html(`
+          <div class="table-responsive">
+            <table id="item-table" class="table table-hover align-middle">
+              <thead >
+                <tr>
+                  <th class="text-center text-nowrap">รูปภาพ</th>
+                  <th class="text-center text-nowrap">รหัสสินค้า</th>
+                  <th class="text-center text-nowrap">ชื่อสินค้า</th>
+                  <th class="text-center text-nowrap">ประเภทสินค้า</th>
+                  <th class="text-center text-nowrap">ราคาฝาก</th>
+                  <th class="text-center text-nowrap">%</th>
+                  <th class="text-center text-nowrap">ดอกเบี้ย</th>
+                  <th class="text-center text-nowrap">ราคาไถ่ถอน</th>
+                  <th class="text-center text-wrap">วันที่ครบกำหนด</th>
+                  <th class="text-center text-wrap">สถานะวันครบกำหนด</th>
+                  <th class="text-center text-nowrap">สัญญา</th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+        `);
+
+        //     if ($(window).width() < 768) {
+        //       $("#list-menu").html(`
+        //     <div class="table-responsive">
+        //         <table id="item-table" class="table table-hover">
+        //             <tbody>
+        //             </tbody>
+        //         </table>
+        //     </div>
+        // `);
+        //     } else {
+        //       $("#list-menu").html(`
+        //     <div class="table-responsive">
+        //         <table id="item-table" class="table table-hover">
+        //             <thead>
+        //                 <tr>
+        //                     <th class="text-center text-nowrap">รูปภาพ</th>
+        //                     <th class="text-center text-nowrap">รหัสสินค้า</th>
+        //                     <th class="text-center text-nowrap">ชื่อสินค้า</th>
+        //                     <th class="text-center text-nowrap">ประเภทสินค้า</th>
+        //                     <th class="text-center text-nowrap">ราคา</th>
+        //                     <th class="text-center text-nowrap">ราคาดอกเบี้ย</th>
+        //                     <th class="text-center text-nowrap">วันที่ครบกำหนดชำระดอก</th>
+        //                     <th class="text-center text-nowrap">วันที่เพิ่มสินค้า</th>
+        //                     <th class="text-center text-nowrap">ดาวโหลด</th>
+        //                 </tr>
+        //             </thead>
+        //             <tbody>
+        //             </tbody>
+        //         </table>
+        //     </div>
+        // `);
+        //     }
+
+        handleFetchAndRender();
+
+        const formatNumberWithCommas = (number) => {
+          return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        };
+
+        const addDATE = (datetime, days) => {
+          let date = new Date(datetime);
+          let number = parseInt(days);
+
+          date.setDate(date.getDate() + number); 
+          console.log(date + " " + days , " " + typeof(number));
+          // let daysOfWeek = ['วันอาทิตย์', 'วันจันทร์', 'วันอังคาร', 'วันพุธ', 'วันพฤหัสบดี', 'วันศุกร์', 'วันเสาร์'];
+          // let dayName = daysOfWeek[date.getDay()];
+          // let formattedDate = `${dayName} ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+          let formattedDate = `${date.getDate()}/${
+            date.getMonth() + 1
+          }/${date.getFullYear()}`;
+ 
+          return formattedDate;
+        };
+
+        const changeformate = (datetime) => {
+          let date = new Date(datetime);
+          // let daysOfWeek = ['วันอาทิตย์', 'วันจันทร์', 'วันอังคาร', 'วันพุธ', 'วันพฤหัสบดี', 'วันศุกร์', 'วันเสาร์'];
+          // let dayName = daysOfWeek[date.getDay()];
+          // let formattedDate = `${dayName} ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+          let formattedDate = `${date.getDate()}/${
+            date.getMonth() + 1
+          }/${date.getFullYear()}`;
+          return formattedDate;
+        };
+
+        const per_interest = (number, rate) => {
+          let num = parseInt(number) * (rate / 100);
+          numberFormate = formatNumberWithCommas(num);
+          return numberFormate;
+        };
+
+        const priceWinterest = (number, rate) => {
+          let num = parseInt(number) * (rate / 100) + parseInt(number);
+          numberFormate = formatNumberWithCommas(num);
+          return numberFormate;
+        };
+        const date_interest = (day, dayExpred) => {
+          let startDate = new Date(); // ใช้วันที่ปัจจุบัน
+          let date = new Date(day);
+          date.setDate(date.getDate() + parseInt(dayExpred));
+
+          let timeDiff = date.getTime() - startDate.getTime();
+          let differenceInDays = Math.round(timeDiff / (1000 * 3600 * 24));
+
+
+                      if (differenceInDays < 0) {
+                return `<span class="badge bg-danger rounded-3 fw-semibold">${differenceInDays}</span>`;
+            } else if (differenceInDays > 0) {
+                return `<span class="badge bg-success rounded-3 fw-semibold">${differenceInDays}</span>`;
+            } else {
+                return `<span class="badge bg-light rounded-3 fw-semibold" >${differenceInDays}</span>`;
+            }
+
+            };
+
+
+
+        const todayItemCount = () => {
+          fetch("../api/select_item.php?case=DayCount", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              case: "DayCount",
+            }),
+          })
+            .then((res) => {
+              if (!res.ok) {
+                throw new Error("Network response was not ok");
+              }
+              return res.json();
+            })
+            .then((data) => {
+              updateTodayItemCount(data);
+            })
+            .catch((err) => {
+              console.error("เกิดข้อผิดพลาดในการเชื่อมต่อ:", err);
+              alert("เกิดข้อผิดพลาดในการเชื่อมต่อ");
+            });
+        };
+
+        const updateTodayItemCount = (data) => {
+          if ($(window).width() >= 768) {
+            $("#days-count").html(`
+          <img src="../src/assets/images/image/calendar1.png" class="card-img-top mt-2" alt="..." style="max-width: 45px; height: auto;">
+          <h1 class="card-text m-2" style="color: white;">${data.todaycount}</h1>
+          <h5 class="card-text mb-2" style="color: white;">รายการจำนำวันนี้</h5>
+            `);
+          } else {
+            $("#days-count").html(`
+          <h3 class="card-text" style="color: white;">${data.todaycount}</h3>
+          <h5 class="card-text px-3" style="color: white;">วันนี้</h5>
+            `);
+          }
+        };
+
+        const allItemCount = () => {
+          fetch("../api/select_item.php?case=AllCount", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              case: "AllCount",
+            }),
+          })
+            .then((res) => {
+              if (!res.ok) {
+                throw new Error("Network response was not ok");
+              }
+              return res.json();
+            })
+            .then((data) => {
+              updateAllItemCount(data);
+            })
+            .catch((err) => {
+              console.error("เกิดข้อผิดพลาดในการเชื่อมต่อ:", err);
+              alert("เกิดข้อผิดพลาดในการเชื่อมต่อ");
+            });
+        };
+
+        const updateAllItemCount = (data) => {
+          if ($(window).width() >= 768) {
+            $("#all-count").html(`
+          <img src="../src/assets/images/image/all1.png" class="card-img-top mt-2" alt="..." style="max-width: 45px; height: auto;">
+          <h1 class="card-text m-2" style="color: white;">${data.allcount}</h1>
+          <h5 class="card-text mb-2" style="color: white;">รายการทั้งหมด</h5>
+            `);
+          } else {
+            $("#all-count").html(`
+          <h3 class="card-text" style="color: white;">${data.allcount}</h3>
+          <h5 class="card-text px-1" style="color: white;">ทั้งหมด</h5>
+          `);
+          }
+        };
+
+        allItemCount();
+
+        // const excelExport = () => {
+        //   if ($(window).width() >= 768) {
+        //     $("#Export_Excel").html(`
+        //     <a href="../excel/create_excel_mysql.php" class="text-center" style="display: flex;text-decoration: none;align-items: center;flex-direction: column;">
+        //       <div class="image-container" style="display: block;">
+                
+        //         <img src="../src/assets/images/image/pngwing1.png" alt="Export" class="default-image"/>
+        //         <img src="../src/assets/images/image/file-arrow-right1.png" alt="Hover" class="hover-image"/>
+        //       </div>
+        //       <h5 class="card-text mt-2" style="color: white; text-align: center;">Export Excel</h5>
+        //     </a>
+        //   `);
+        //   } else {
+        //     $("#Export_Excel").html(`
+        //     <div class="image-container">
+        //       <a href="../excel/create_excel_mysql.php" style="display: block;">
+        //         <img src="../src/assets/images/image/pngwing1.png" alt="Export" class="default-image "/>
+        //         <img src="../src/assets/images/image/file-arrow-right1.png" alt="Hover" class="hover-image"/>
+        //       </a>
+        //     </div>
+        //   `);
+        //   }
+        // };
+
+        // excelExport();
+
+        $(window).resize(function () {
+          $("#days-count").empty();
+          $("#all-count").empty();
+          $("#Export_Excel").empty();
+          todayItemCount();
+          allItemCount();
+          excelExport();
+        });
+
+        todayItemCount();
+
+        // Modal image handling
+        var modal = document.getElementById("myModal");
+        var modalImg = document.getElementById("img01");
+
+        $(document).on("click", ".clickable-image", function () {
+          var imgSrc = $(this).attr("src");
+          var imgAlt = $(this).attr("alt");
+          modal.style.display = "block";
+          modalImg.src = imgSrc;
+        });
+
+        var span = document.getElementsByClassName("close")[0];
+        span.onclick = function () {
+          modal.style.display = "none";
+        };
+
+        // Close modal when clicking outside of the image
+        modal.onclick = function (event) {
+          if (event.target == modal) {
+            modal.style.display = "none";
+          }
+        };
+
+        let lastScrollTop = 0;
+
+        window.addEventListener("scroll", function () {
+          let scrollTop =
+            window.pageYOffset || document.documentElement.scrollTop;
+
+          if (scrollTop > lastScrollTop) {
+            $(".app-header").addClass("hidden");
+          } else {
+            $(".app-header").removeClass("hidden");
+          }
+
+          lastScrollTop = scrollTop;
+        });
+      });
+
+      document.addEventListener("DOMContentLoaded", function(){
+  document.querySelectorAll('.sidebar-nav .sidebar-link').forEach(function(element){
+    
+    element.addEventListener('click', function (e) {
+      let nextEl = element.nextElementSibling;
+      let parentEl  = element.parentElement;	
+
+      if(nextEl) {
+        e.preventDefault();	
+        let mycollapse = new bootstrap.Collapse(nextEl);
+        
+        if(nextEl.classList.contains('show')){
+          mycollapse.hide();
+        } else {
+          // Close all other open submenus
+          document.querySelectorAll('.sidebar-nav .submenu.show').forEach(function(opened_submenu) {
+            new bootstrap.Collapse(opened_submenu).hide();
+          });
+
+          mycollapse.show();
+        }
+      }
+    }); // addEventListener
+  }); // forEach
+});
+
+
+    </script>
+  </body>
+</html>

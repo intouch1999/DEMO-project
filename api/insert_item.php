@@ -93,8 +93,12 @@ if (@$_POST['case'] == "insert") {
 
             // Prepare LINE Notify API request
             $url = 'https://notify-api.line.me/api/notify';
-            $token = 'Line_Token';
-            // $token = 'Line_Token';
+            // ส่วนตัว
+            //$token = 'Line_Token';
+            // old group
+            //  $token = 'Line_Token';
+             //new group
+             $token = 'Line_Token';
             $headers = array(
                 'Authorization: Bearer ' . $token,
             );

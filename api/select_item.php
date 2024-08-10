@@ -11,6 +11,7 @@ if (@$decode['case'] == "items") {
         $offset = ($page - 1) * $itemsPerPage;
 
         $query = "SELECT * FROM `insert_items` ORDER BY item_id DESC LIMIT $itemsPerPage OFFSET $offset";
+        
         $stmt = $conn->query($query);
         
         $data = [];

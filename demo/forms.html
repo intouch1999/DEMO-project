@@ -31,6 +31,15 @@ button[type="button"]:hover {
 body {
         background-color: aliceblue;
       }
+
+      
+      .sidebar-nav li .submenu{ 
+	list-style: none; 
+	margin: 0; 
+	padding: 0; 
+	padding-left: 1rem; 
+	padding-right: 1rem;
+}
   </style>
 </head>
 
@@ -71,11 +80,17 @@ body {
           <span class="hide-menu">Home</span>
         </li>
         <li class="sidebar-item">
-          
-          <a class="sidebar-link" href="./index.html" aria-expanded="false">
+          <a class="sidebar-link" href="#"> Dashboard </a>
+          <ul class="submenu collapse">
+            <li class="sidebar-item"><a class="sidebar-link" href="./index.html" aria-expanded="false"> รายวัน </a></li>
+            <li class="sidebar-item"><a class="sidebar-link" href="./monthly.html" aria-expanded="false"> รายเดือน </a></li>
+          </ul>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="./product_list.html" aria-expanded="false">
             <span>
               <i class="ti ti-home"></i>
-            </span><span class="hide-menu">หน้าแรก</span>
+            </span><span class="hide-menu">รายการฝาก</span>
           </a>
         </li>
         <li class="sidebar-item">
@@ -330,6 +345,32 @@ window.addEventListener('scroll', function() {
   }
 
   lastScrollTop = scrollTop;
+});
+
+document.addEventListener("DOMContentLoaded", function(){
+  document.querySelectorAll('.sidebar-nav .sidebar-link').forEach(function(element){
+    
+    element.addEventListener('click', function (e) {
+      let nextEl = element.nextElementSibling;
+      let parentEl  = element.parentElement;	
+
+      if(nextEl) {
+        e.preventDefault();	
+        let mycollapse = new bootstrap.Collapse(nextEl);
+        
+        if(nextEl.classList.contains('show')){
+          mycollapse.hide();
+        } else {
+          // Close all other open submenus
+          document.querySelectorAll('.sidebar-nav .submenu.show').forEach(function(opened_submenu) {
+            new bootstrap.Collapse(opened_submenu).hide();
+          });
+
+          mycollapse.show();
+        }
+      }
+    }); // addEventListener
+  }); // forEach
 });
 </script>
 

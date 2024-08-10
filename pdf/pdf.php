@@ -3,9 +3,9 @@ require_once('vendor/autoload.php');
 
 // Database connection settings
 $host = 'localhost';
-$db = 'jumnum_db';
-$user = 'Username_sivanat';
-$pass = 'sivanatdev';
+$db = 'DB_NAME';
+$user = 'Username';
+$pass = 'Password';
 $charset = 'utf8mb4';
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
 $options = [
@@ -227,7 +227,7 @@ if (isset($_GET['item_id'])) {
             return $interest;
         }
 
-        $price_interest = $item['item_price'] + interest($item['item_price'], $item['item_d_interest']);
+        $price_interest = $item['item_price'] + interest($item['item_price'], $item['item_interest']);
 
         $price_interest_formatTH = Convert($price_interest);
 
