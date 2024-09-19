@@ -1,4 +1,4 @@
-#DEMO Pawn Shop Management System
+##DEMO Pawn Shop Management System
 
 ## Overview
 This project is designed to support pawn shops by streamlining the process of managing item deposits. When an item is deposited, the system records it and sends notifications via LINE. The project also includes libraries for generating PDF contracts and exporting data to Excel, making it easier to manage and document transactions efficiently.
